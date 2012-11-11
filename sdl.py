@@ -8,8 +8,7 @@ __all__ = ['SDL']
 
 
 class SDL(Engine):
-    """SDL(title, (width, height)[, fullscreen[, max_fps]])
-    -> the Engine
+    """SDL(title, (width, height)[, fullscreen[, max_fps]]) -> the Engine
 
     Engine based on the PyGame binding to the SDL library.
 
