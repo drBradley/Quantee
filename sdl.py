@@ -8,19 +8,28 @@ __all__ = ['SDL']
 
 
 class SDL(Engine):
-    """SDL(title, (width, height)[, fullscreen[, max_fps]]) -> the Engine
+    """SDL(title, (width, height), event_manager[, fullscreen[, max_fps]]) ->
+            the Engine
 
     Engine based on the PyGame binding to the SDL library.
+
+    `event_manager` is to be an instance of `sdl.EventManager`
 
     `fullscreen` defaults to False and `max_fps` defaults to 32.
     """
 
-    def __init__(self, title, screen_size, fullscreen=False, max_fps=32):
+    def __init__(self, title, screen_size, event_manager, fullscreen=False, max_fps=32):
 
         # Prerequisite initialisation
-        super(Engine, self).__init__()
+        super(SDL, self).__init__()
 
         pygame.init()
+
+        # Prepare the event system
+
+        pygame.events.set_allowed(event_manager.allowed)
+
+        self.__event_manager = event_manager
 
         # Prepare for rendering
         pygame.display.set_mode(
@@ -41,7 +50,11 @@ class SDL(Engine):
     def input(self):
         """E.input() -> an Event or None"""
 
-        raise NotImplementedError()
+        raw_event = pygame.event.poll()
+
+        event = self.__event_manager.transform(raw_event)
+
+        return event
 
     def tick(self):
         """E.tick()
