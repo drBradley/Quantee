@@ -4,7 +4,8 @@
 import pygame
 
 from engine import Engine
-__all__ = ['SDL']
+
+__all__ = ['SDL', 'EventManager']
 
 
 class SDL(Engine):
@@ -27,7 +28,7 @@ class SDL(Engine):
 
         # Prepare the event system
 
-        pygame.events.set_allowed(event_manager.allowed)
+        pygame.event.set_allowed(event_manager.allowed)
 
         self.__event_manager = event_manager
 
@@ -93,6 +94,32 @@ class SDL(Engine):
         The coordinates are standard Cartesian. It's the Engine's job to
         transform them to the underlying coordinate system used by the
         rendering library.
+        """
+
+        raise NotImplementedError()
+
+
+class EventManager(object):
+    """Abstract base class for EventManagers."""
+
+    __allowed = []
+
+    @property
+    def allowed(self):
+        """EM.allowed
+
+        Property, returning a list of allowed event types (configured per
+        class). Subclasses may decide to use a more sophisticated mechanism of
+        determining gets into it's value.
+        """
+
+        return self.__class__.__allowed
+
+    def transform(self, raw_event):
+        """EM.transform(raw_event) -> event
+
+        Take a PyGame event and return a one tailored to the needs of a
+        particular game.
         """
 
         raise NotImplementedError()
