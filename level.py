@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 
 
+__all__ = ['Level']
+
+
 class Level(object):
     """Level class"""
 
