@@ -26,6 +26,15 @@ class Box(Collider):
 
         raise NotImplementedError()
 
+    def move_by(self, dx, dy):
+        """B.move_by(dx, dy)
+
+        Moves the box by a given distance.
+        """
+
+        self.x += dx
+        self.y += dy
+
 
 class Boxes(Collider, list):
     """Boxes() -> empty Box container
@@ -60,3 +69,12 @@ class Boxes(Collider, list):
                     result.append(common)
 
         return result
+
+    def move_by(self, dx, dy):
+        """B.move_by(dx, dy)
+
+        Move the Boxes by a given distance.
+        """
+
+        for box in self:
+            box.move_by(dx, dy)

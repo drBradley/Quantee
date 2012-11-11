@@ -7,7 +7,10 @@ __all__ = ['Entity']
 
 
 class State(object):
-    """Helper class allowing the creation of arbitrary fields."""
+    """State() -> a state
+
+    Helper class allowing the creation of arbitrary fields.
+    """
 
 
 class Entity(object):
@@ -21,6 +24,8 @@ class Entity(object):
         self.__next = State()
         self.__curr = State()
 
+        self.__needs_redraw = False
+
         # Initialise the next and current state
         for ed in [self.__next, self.__curr]:
 
@@ -31,8 +36,8 @@ class Entity(object):
             ed.move = (0, 0)
             ed.v = (0, 0)
 
-            ed.b_box = Box(x, y, *b_box)
-            ed.r_box = Box(x, y, *r_box)
+            ed.b_box = Box(0, 0, *b_box)
+            ed.r_box = Box(0, 0, *r_box)
 
             self.__behaviour.prepare(ed)
 
@@ -83,10 +88,20 @@ class Entity(object):
         return self.__curr.dead
 
     # Rendering
+    def force_redraw(self):
+        """E.force_redraw()
+
+        Forces the Entity to be re-drawn in the next rendering pass.
+        """
+
+        self.__needs_redraw = True
+
     def draw(self, engine):
         """E.draw(engine)
 
         Given an Engine, draws itself.
         """
 
-        raise NotImplementedError()
+        # FIXME: Implement drawing
+
+        self.__needs_redraw = False
