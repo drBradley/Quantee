@@ -8,7 +8,8 @@ class Level(object):
     """Level class"""
 
     def __init__(self, container, ender):
-        pass
+
+        self.__ender = ender
 
     @property
     def entities(self):
@@ -29,9 +30,9 @@ class Level(object):
         """
 
         # If the level is done, return the next one
-        if self.done:
+        if self.done(dt, event):
 
-            return self.next_level
+            return self.next_level()
 
         # Perform a logical game step
         for entity in self.entities:
@@ -53,24 +54,22 @@ class Level(object):
 
         raise NotImplementedError()
 
-    @property
-    def done(self):
-        """L.done -> True or False
+    def done(self, dt, event):
+        """L.done(dt, event) -> True or False
 
         Has the level finished?
         """
 
-        raise NotImplementedError()
+        return self.__ender.done(dt, event, self)
 
-    @property
     def next_level(self):
         """L.next_level -> another Level or None
 
         The level to follow the current one. The value may be
-        undefined untill L.done is True.
+        undefined as long as L.done(dt, event) is False.
         """
 
-        raise NotImplementedError()
+        return self.__ender.next_level()
 
     # Rendering
     def viewport(self, engine):
