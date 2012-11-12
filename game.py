@@ -26,8 +26,7 @@ class Game(object):
             # Perform a logical step of the game
             self.__level = self.__level.step(self,
                     self.__engine.dt(),
-                    event,
-                    self.__engine)
+                    event)
 
             # Render the level and calculate the next dt
             self.__level.render(self.__engine)

@@ -21,8 +21,8 @@ class Level(object):
         raise NotImplementedError()
 
     # Game logic
-    def step(self, dt, event, engine):
-        """L.step(dt, event, engine) -> a Level or None
+    def step(self, dt, event):
+        """L.step(dt, event) -> a Level or None
 
         Unless the level has finished, performs a logical step and
         returns itself. Otherwise -- returns a new level or None.
