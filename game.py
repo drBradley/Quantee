@@ -21,7 +21,7 @@ class Game(object):
         # Until the game stops, iterate over the events
         while self.__level is not None:
 
-            event = self.__input()
+            event = self.__engine.input()
 
             # Perform a logical step of the game
             self.__level = self.__level.step(self,
