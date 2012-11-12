@@ -60,13 +60,15 @@ class Entity(object):
 
         return self.__curr.v
 
-    def decide(self, dt, event, level):
-        """E.decide(dt, event, level)
+    def decide(self, dt, event, stage):
+        """E.decide(dt, event, stage)
 
         Decide what to do in the current step.
         """
 
-        self.__behaviour.decide(dt, event, level,
+        self.__behaviour.decide(
+                dt, event,
+                stage,
                 self.__curr, self.__next)
 
     def act(self):

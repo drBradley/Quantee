@@ -1,0 +1,121 @@
+# -*- coding: utf-8 -*-
+
+
+__all__ = ['Stage']
+
+
+class Stage(object):
+    """Stage((width, height), layers, default_layer) -> a new Stage
+
+    Stages store Entities in layers.
+
+    Layers are all named. Layers and the Entities in them have a set order.
+    """
+
+    def __init__(self, size, layers, default_layer):
+
+        # Camera-related fields
+        self.__size = size
+        self.__cam_at = None
+
+        # Entity storage-related fields
+        self.__layers = {}
+        self.__spawns = {}
+
+        self.__layer_names = layers
+        self.__default_layer = default_layer
+
+        for layer in layers:
+
+            self.__layers[layer] = []
+            self.__spawns[layer] = []
+
+    def __iter__(self):
+        """S.__iter__() <=> iter(S)"""
+
+        for name in self.__layer_names:
+
+            layer = self.__layers[name]
+
+            for entity in layer:
+
+                yield entity
+
+    @property
+    def size(self):
+        """S.size -> (width, height)"""
+
+        return self.__size
+
+    # Logic
+    def harvest_dead(self):
+        """S.harvest_dead()
+
+        Remove all the dead Entities from the Stage.
+        """
+
+        dead = {}
+
+        # Find the indices of dead Entities in each layer
+        for name in self.__layers:
+
+            dead[name] = []
+
+            for i, entity in self.__layers[name]:
+
+                if entity.dead:
+
+                    dead[name].insert(0, i)
+
+        # Remove the dead Entities from each layer
+        #
+        # First removes the ones with bigger indices, so the indices of the
+        # rest need not be adjusted
+        for name in dead:
+
+            for i in dead[name]:
+
+                dead[name].pop(i)
+
+    def add_spawn(self, entity, layer=None):
+        """S.add_spawn(entity[, layer])
+
+        Add an Entity to be spawned in the next iteration.
+        """
+
+        if layer is None:
+            layer = self.__default_layer
+
+        if layer not in self.__layer_names:
+            raise ValueError('Non-existent layer name')
+
+        self.__spawns[layer].append(entity)
+
+    def spawn(self):
+        """S.spawn()
+
+        Spawns all the Entities scheudled for spawning.
+        """
+
+        for name in self.__layer_names:
+
+            self.__layers[name].extend(self.__spawns[name])
+
+    # Camera system
+    @property
+    def cam_at(self):
+        """S.cam_at -> Entity the camera is centered on
+
+        S.cam_at = entity
+
+        Set the Entity the cam follows."""
+
+        if self.__cam_at is None:
+            return (0, 0)
+
+        return self.__cam_at.pos
+
+    @cam_at.setter
+    def __set_cam_at(self, entity):
+
+        self.__cam_at = entity
