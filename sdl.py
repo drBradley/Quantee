@@ -9,28 +9,30 @@ __all__ = ['SDL', 'EventManager']
 
 
 class SDL(Engine):
-    """SDL(title, (width, height), event_manager[, fullscreen[, max_fps]]) ->
-            the Engine
+    """SDL(title, (width, height), event_manager[, fullscreen[, max_fps[,
+    use_busy_loop]]]) -> the Engine
 
     Engine based on the PyGame binding to the SDL library.
 
-    `event_manager` is to be an instance of `sdl.EventManager`
+      * `event_manager` is to be an instance of `sdl.EventManager`
 
-    `fullscreen` defaults to False and `max_fps` defaults to 32.
+      * `fullscreen` defaults to False and `max_fps` defaults to 32
+
+      * `use_busy_loop` sets whether the clock system should actively loop
+        while waiting, or use the OS level sleep mechanism. The first uses more
+        CPU cycles and is more precise. The second is a smaller strain on the
+        machine but less precise.
+
+        Defaults to False.
     """
 
-    def __init__(self, title, screen_size, event_manager, fullscreen=False, max_fps=32):
+    def __init__(self, title, screen_size, event_manager, fullscreen=False,
+            max_fps=32, use_busy_loop=False):
 
         # Prerequisite initialisation
         super(SDL, self).__init__()
 
         pygame.init()
-
-        # Prepare the event system
-
-        pygame.event.set_allowed(event_manager.allowed)
-
-        self.__event_manager = event_manager
 
         # Prepare for rendering
         pygame.display.set_mode(
@@ -43,9 +45,16 @@ class SDL(Engine):
 
         self.__sprite_cache = {}
 
+        # Prepare the event system
+        pygame.event.set_allowed(None)
+        pygame.event.set_allowed(event_manager.allowed)
+
+        self.__event_manager = event_manager
+
         # Prepare SDL-based clock system
         self.__clock = pygame.time.Clock()
         self.__max_fps = max_fps
+        self.__use_busy_loop = use_busy_loop
 
     # Input and time
     def input(self):
@@ -72,6 +81,10 @@ class SDL(Engine):
 
         The time since the last call to tick.
         """
+
+        if self.__use_busy_loop:
+
+            return self.__clock.tick_busy_loop(self.__max_fps)
 
         return self.__clock.tick(self.__max_fps)
 
@@ -102,8 +115,6 @@ class SDL(Engine):
 class EventManager(object):
     """Abstract base class for EventManagers."""
 
-    __allowed = []
-
     @property
     def allowed(self):
         """EM.allowed
@@ -113,7 +124,7 @@ class EventManager(object):
         determining gets into it's value.
         """
 
-        return self.__class__.__allowed
+        raise NotImplementedError()
 
     def transform(self, raw_event):
         """EM.transform(raw_event) -> event

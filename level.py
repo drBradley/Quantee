@@ -21,7 +21,7 @@ class Level(object):
         """
 
         # If the level is done, return the next one
-        if self.__ender.done(dt, event, self):
+        if self.__ender.done(dt, event, self.__stage):
 
             return self.__ender.next_level()
 
@@ -52,7 +52,7 @@ class Level(object):
         Draw the visible part of the level on screen.
        """
 
-        engine.set_viewport(self.viewport(engine))
+        #engine.set_viewport(self.viewport(engine))
 
         # See which Entities need to be cleared, which need only to be
         # redrawn, and which need no action

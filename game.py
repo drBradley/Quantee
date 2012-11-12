@@ -21,14 +21,15 @@ class Game(object):
         # Until the game stops, iterate over the events
         while self.__level is not None:
 
+            # Render the level and get new input
+            self.__level.render(self.__engine)
+
             event = self.__engine.input()
 
             # Perform a logical step of the game
-            self.__level = self.__level.step(self,
-                    self.__engine.dt(),
+            self.__level = self.__level.step(
+                    self.__engine.dt,
                     event)
 
-            # Render the level and calculate the next dt
-            self.__level.render(self.__engine)
-
+            # Tick the game clock
             self.__engine.tick()
