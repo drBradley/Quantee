@@ -4,9 +4,13 @@ import pygame
 
 from game import Game
 from sdl import SDL, EventManager
+
 from level import Level
 from stage import Stage
 from ender import Ender
+
+from cam import StaticCam
+from boxes import Box
 
 
 class DumbEnder(Ender):
@@ -39,9 +43,10 @@ class DumbLevel(Level):
 
     def __init__(self):
 
+        cam = StaticCam(Box(0, 0, 640, 480))
         stage = Stage((0, 0), ['no'], 'no')
 
-        super(DumbLevel, self).__init__(stage, DumbEnder())
+        super(DumbLevel, self).__init__(cam, stage, DumbEnder())
 
 
 class DumbManager(EventManager):
