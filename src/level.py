@@ -7,8 +7,9 @@ __all__ = ['Level']
 class Level(object):
     """Level class"""
 
-    def __init__(self, stage, ender):
+    def __init__(self, cam, stage, ender):
 
+        self.__cam = cam
         self.__stage = stage
         self.__ender = ender
 
@@ -39,12 +40,12 @@ class Level(object):
         return self
 
     # Rendering
-    def viewport(self, engine):
+    def viewport(self):
         """L.viewport() -> a Box
 
         Returns the part of the level to be visible on screen."""
 
-        raise NotImplementedError()
+        return self.__cam.viewport(self.__stage)
 
     def render(self, engine):
         """L.render(engine)

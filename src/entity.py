@@ -98,7 +98,7 @@ class Entity(object):
 
         self.__needs_redraw = True
 
-    def draw(self, engine):
+    def draw(self, engine, viewport):
         """E.draw(engine)
 
         Given an Engine, draws itself.
