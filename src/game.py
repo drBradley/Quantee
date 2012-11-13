@@ -37,5 +37,5 @@ class Game(object):
             elif level is not self.__levels[-1]:
                 self.__levels.append(level)
 
-            # Tick the game clock
-            self.__engine.tick()
+            # Let the engine do whatever it needs to
+            self.__engine.update()

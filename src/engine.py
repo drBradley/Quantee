@@ -18,11 +18,12 @@ class Engine(object):
 
         return (None, time.time() - self.__prev)
 
-    def tick(self):
-        """E.tick()
+    def update(self):
+        """E.update()
 
-        Needs to be called every loop iteration to keep the internal
-        clock running.
+        Perform operations that need to be called every loop.
+
+        The default implementation makes a tick in the default clock system.
         """
 
         self.__prev = time.time()

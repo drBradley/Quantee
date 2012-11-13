@@ -58,7 +58,7 @@ class SDL(Engine):
 
     # Input and time
     def input(self):
-        """E.input() -> an Event or None"""
+        """SDL.input() -> an Event or None"""
 
         if self.__use_busy_loop:
 
@@ -73,24 +73,25 @@ class SDL(Engine):
 
         return event, dt
 
-    def tick(self):
-        """E.tick()
+    def update(self):
+        """SDL.update()
 
-        Needs to be called every loop iteration to keep the internal
-        clock running.
+        Call every iteration to ensure that drawing works properly -- in PyGame
+        everything is first drawn to a buffer and only later, with this,
+        applied on top of the display memory.
         """
 
-        pass
+        pygame.display.update()
 
     # Rendering
     @property
     def screen_size(self):
-        """E.screen_size -> (width, height)"""
+        """SDL.screen_size -> (width, height)"""
 
         return self.__screen.get_size()
 
     def draw(self, pos, sprite_name, rect=None):
-        """E.draw((x, y), sprite_name[, Box(x_sub, y_sub, w_sub, h_sub)])
+        """SDL.draw((x, y), sprite_name[, Box(x_sub, y_sub, w_sub, h_sub)])
 
         Draws the sprite named sprite_name at the (x, y) coordinates of the
         window.
