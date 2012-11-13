@@ -90,20 +90,31 @@ class Entity(object):
         return self.__curr.dead
 
     # Rendering
-    def force_redraw(self):
-        """E.force_redraw()
+    def force_redraw(self, part):
+        """E.force_redraw(part)
 
-        Forces the Entity to be re-drawn in the next rendering pass.
+        Forces the Entity to re-draw a part of itself in the next rendering
+        pass.
         """
 
-        self.__needs_redraw = True
+        self.__parts_to_redraw.append(part)
+
+    def do_i_need_redraw(self, stage, viewport):
+        """E.do_i_need_redraw(stage, viewport) -> True or False"""
+
+        raise NotImplementedError()
+
+    def who_else_to_redraw(self, stage, viewport):
+        """E.who_else_to_redraw(stage, viewport) -> a list of Entities who'll
+        need redrawing if the current one will"""
 
     def draw(self, engine, viewport):
-        """E.draw(engine)
+        """E.draw(engine, viewport)
 
-        Given an Engine, draws itself.
+        Given an Engine and a Box describing the viewport, draws the parts of
+        itself that need refreshing.
         """
 
         # FIXME: Implement drawing
 
-        self.__needs_redraw = False
+        self.__needs_redraw = []

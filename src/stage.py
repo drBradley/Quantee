@@ -101,21 +101,11 @@ class Stage(object):
 
             self.__layers[name].extend(self.__spawns[name])
 
-    # Camera system
-    @property
-    def cam_at(self):
-        """S.cam_at -> Entity the camera is centered on
+    # Rendering
+    def render(self, engine, viewport):
+        """S.render(engine, viewport)
 
-        S.cam_at = entity
+        Render the part of the stage described by viewport using the engine.
+        """
 
-        Set the Entity the cam follows."""
-
-        if self.__cam_at is None:
-            return (0, 0)
-
-        return self.__cam_at.pos
-
-    @cam_at.setter
-    def __set_cam_at(self, entity):
-
-        self.__cam_at = entity
+        raise NotImplementedError()

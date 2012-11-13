@@ -40,22 +40,10 @@ class Level(object):
         return self
 
     # Rendering
-    def viewport(self):
-        """L.viewport() -> a Box
-
-        Returns the part of the level to be visible on screen."""
-
-        return self.__cam.viewport(self.__stage)
-
     def render(self, engine):
         """L.render(engine)
 
         Draw the visible part of the level on screen.
        """
 
-        #engine.set_viewport(self.viewport(engine))
-
-        # See which Entities need to be cleared, which need only to be
-        # redrawn, and which need no action
-
-        # Render the Entities in proprer order
+        self.__stage.render(engine, self.__cam.viewport(self.__stage))
