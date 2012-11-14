@@ -112,8 +112,20 @@ class Entity(object):
         This method checks whether the Entity needs a re-draw because of her own state of change"""
 
     def who_else_to_redraw(self, stage, viewport):
-        """E.who_else_to_redraw(stage, viewport) -> a list of Entities who'll
-        need redrawing if the current one will"""
+        """E.who_else_to_redraw(stage, viewport) -> a set
+
+        The Entities that will need redrawing if the current one will.
+        """
+
+        who_else = set()
+
+        for entity in stage:
+            if entity is not self:
+                # TODO:
+                #  - Check whether the other entity needs redrawing
+                #     - If yes, add it to the who_else set
+
+        return who_else
 
     def draw(self, engine, viewport):
         """E.draw(engine, viewport)
