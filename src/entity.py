@@ -16,7 +16,7 @@ class State(object):
 class Entity(object):
     """Entity class, used to represent all in-game objects."""
 
-    def __init__(self, pos, b_box, r_box, behaviour):
+    def __init__(self, pos, b_box, r_box, state, behaviour):
 
         # Initialise the fields
         self.__behaviour = behaviour
@@ -30,14 +30,15 @@ class Entity(object):
         for ed in [self.__next, self.__curr]:
 
             ed.dead = False
-
-            x, y = ed.pos = pos
+            ed.state = state
 
             ed.move = (0, 0)
             ed.v = (0, 0)
 
-            ed.b_box = Box(0, 0, *b_box)
-            ed.r_box = Box(0, 0, *r_box)
+            x, y = pos
+
+            ed.b_box = Box(x, y, *b_box)
+            ed.r_box = Box(x, y, *r_box)
 
             self.__behaviour.prepare(ed)
 
@@ -59,6 +60,12 @@ class Entity(object):
         """E.v -> (v_x, v_y)"""
 
         return self.__curr.v
+
+    @property
+    def state(self):
+        """E.state -> name of sprite to use for rendering"""
+
+        return self.__curr.state
 
     def decide(self, dt, event, stage):
         """E.decide(dt, event, stage)
@@ -100,7 +107,9 @@ class Entity(object):
         self.__parts_to_redraw.append(part)
 
     def do_i_need_redraw(self, stage, viewport):
-        """E.do_i_need_redraw(stage, viewport) -> True or False"""
+        """E.do_i_need_redraw(stage, viewport) -> True or False
+
+        This method checks whether the Entity needs a re-draw because of her own state of change"""
 
     def who_else_to_redraw(self, stage, viewport):
         """E.who_else_to_redraw(stage, viewport) -> a list of Entities who'll
