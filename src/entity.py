@@ -102,8 +102,6 @@ class Entity(object):
     def do_i_need_redraw(self, stage, viewport):
         """E.do_i_need_redraw(stage, viewport) -> True or False"""
 
-        raise NotImplementedError()
-
     def who_else_to_redraw(self, stage, viewport):
         """E.who_else_to_redraw(stage, viewport) -> a list of Entities who'll
         need redrawing if the current one will"""
