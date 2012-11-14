@@ -108,4 +108,4 @@ class Stage(object):
         Render the part of the stage described by viewport using the engine.
         """
 
-        raise NotImplementedError()
+        # TODO: Implement
