@@ -24,7 +24,33 @@ class Box(Collider):
         if not isinstance(other, Box):
             return NotImplemented
 
-        raise NotImplementedError()
+        points = set()
+
+        for b in (self, other):
+
+            points.add((b.x, b.y))
+            points.add((b.x + b.w, b.y))
+            points.add((b.x, b.y + b.h))
+            points.add((b.x + b.w, b.y + b.h))
+
+        for p in intersect_edges(self, other):
+
+            points.add(p)
+
+        corners = []
+
+        for point in points:
+            if point in self and point in other:
+                corners.append(point)
+
+        corners.sort()
+
+        x, y = corners[0]
+        x_w, y_h = corners[-1]
+
+        w, h = x_w - x, y_h - y
+
+        return Box(x, y, w, h)
 
     def move_by(self, dx, dy):
         """B.move_by(dx, dy)
