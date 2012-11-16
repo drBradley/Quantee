@@ -14,9 +14,9 @@ class Engine(object):
 
     # Input and time
     def input(self):
-        """E.input() -> an Event or None"""
+        """E.input() -> (an Event or None, dt)"""
 
-        raise NotImplementedError()
+        return (None, time.time() - self.__prev)
 
     def tick(self):
         """E.tick()
@@ -26,15 +26,6 @@ class Engine(object):
         """
 
         self.__prev = time.time()
-
-    @property
-    def dt(self):
-        """E.dt
-
-        The time since the last call to tick.
-        """
-
-        return time.time() - self.__prev
 
     # Rendering
     @property

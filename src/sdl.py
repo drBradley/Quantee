@@ -60,11 +60,18 @@ class SDL(Engine):
     def input(self):
         """E.input() -> an Event or None"""
 
-        raw_event = pygame.event.poll()
+        if self.__use_busy_loop:
 
+            dt = self.__clock.tick_busy_loop(self.__max_fps)
+
+        else:
+
+            dt = self.__clock.tick(self.__max_fps)
+
+        raw_event = pygame.event.poll()
         event = self.__event_manager.transform(raw_event)
 
-        return event
+        return event, dt
 
     def tick(self):
         """E.tick()
@@ -74,19 +81,6 @@ class SDL(Engine):
         """
 
         pass
-
-    @property
-    def dt(self):
-        """E.dt
-
-        The time since the last call to tick.
-        """
-
-        if self.__use_busy_loop:
-
-            return self.__clock.tick_busy_loop(self.__max_fps)
-
-        return self.__clock.tick(self.__max_fps)
 
     # Rendering
     @property

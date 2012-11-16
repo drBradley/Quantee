@@ -10,7 +10,7 @@ class Game(object):
 
         self.__engine = engine
 
-        self.__level = init_level
+        self.__levels = [init_level]
 
     def run(self):
         """G.run()
@@ -19,17 +19,23 @@ class Game(object):
         """
 
         # Until the game stops, iterate over the events
-        while self.__level is not None:
+        while len(self.__levels) > 0:
 
             # Render the level and get new input
-            self.__level.render(self.__engine)
+            self.__levels[-1].render(self.__engine)
 
-            event = self.__engine.input()
+            event, dt = self.__engine.input()
 
             # Perform a logical step of the game
-            self.__level = self.__level.step(
-                    self.__engine.dt,
+            level = self.__levels[-1].step(
+                    dt,
                     event)
+
+            if level is None:
+                self.__levels.pop()
+
+            elif level is not self.__levels[-1]:
+                self.__levels.append(level)
 
             # Tick the game clock
             self.__engine.tick()
