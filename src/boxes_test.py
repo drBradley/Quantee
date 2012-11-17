@@ -132,6 +132,9 @@ class IntersectionTest(unittest.TestCase):
     def test_associative(self):
         pass
 
+    def test_commutative(self):
+        pass
+
     def test_complement(self):
         pass
 
