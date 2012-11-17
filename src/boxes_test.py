@@ -134,22 +134,70 @@ class IntersectionTest(OperationTest):
     """Test whether set intersections work properly"""
 
     def test_associative(self):
-        pass
+
+        for a, b, c in self.cases:
+
+            d = (a & b) & c
+            e = a & (b & c)
+
+            for point in self.points:
+
+                self.assertEqual(point in d, point in e)
 
     def test_commutative(self):
-        pass
+
+        for a, b, _ in self.cases:
+
+            d = a & b
+            e = b & a
+
+            for point in self.points:
+
+                self.assertEqual(point in d, point in e)
 
     def test_complement(self):
-        pass
+
+        for case in self.cases:
+            for a in case:
+                d = a & complement(a)
+
+                for point in self.points:
+
+                    self.assertNotIn(point, d)
 
     def test_with_self(self):
-        pass
+
+        for case in self.cases:
+            for a in case:
+
+                d = a & a
+
+                for point in self.points:
+
+                    self.assertEqual(
+                            point in d,
+                            point in a)
 
     def test_with_subset(self):
         pass
 
     def test_with_disjoint(self):
-        pass
+
+        for case in self.cases:
+            for a in case:
+
+                if not (a.w >= 2 and a.h >= 2):
+                    continue
+
+                b = Box(a.x + 1, a.y + 1, a.w - 1, a.h - 1)
+
+                d = a & b
+
+                for point in self.points:
+
+                    self.assertEqual(
+                            point in d,
+                            point in b)
 
 
 class DeMorganTest(unittest.TestCase):
