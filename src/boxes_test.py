@@ -29,8 +29,8 @@ def complement(box):
         return reduce(lambda a, b: a & b, map(complement, box), everything)
 
 
-class UnionTest(unittest.TestCase):
-    """Test whether set unions work properly"""
+class OperationTest(unittest.TestCase):
+    """Common base class for operation tests -- sets up the test cases"""
 
     def setUp(self):
         self.cases = []
@@ -61,6 +61,10 @@ class UnionTest(unittest.TestCase):
             self.points.append((
                     random.randint(0, MAX_X + MAX_W),
                     random.randint(0, MAX_Y + MAX_H)))
+
+
+class UnionTest(OperationTest):
+    """Test whether set unions work properly"""
 
     def test_associative(self):
 
@@ -126,7 +130,7 @@ class UnionTest(unittest.TestCase):
                             point in a)
 
 
-class IntersectionTest(unittest.TestCase):
+class IntersectionTest(OperationTest):
     """Test whether set intersections work properly"""
 
     def test_associative(self):
