@@ -220,7 +220,9 @@ class DistributiveTest(unittest.TestCase):
     """Test whether the set operations are distributive, ie:
 
         x | (y & z) = (x | y) & (x | z)
+        (x | y) & z = (x & z) | (y & z)
         x & (y | z) = (x & y) | (x & z)
+        (x & y) | z = (x | z) & (y | z)
     """
 
     def union_left_distributive(self):
