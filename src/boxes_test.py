@@ -26,10 +26,10 @@ def complement(box):
 
         everything = Box(0, 0, MAX_X + MAX_W, MAX_Y + MAX_H)
 
-        return reduce(lambda a, b: a & b, map(complement, box), everything)
+        return repduce(lambda a, b: a & b, map(complement, box), everything)
 
 
-class OperationTest(unittest.TestCase):
+class BaseTest(unittest.TestCase):
     """Common base class for operation tests -- sets up the test cases"""
 
     def setUp(self):
@@ -210,10 +210,28 @@ class DeMorganTest(unittest.TestCase):
     """
 
     def first_law(self):
-        pass
+        for a, b, _ in self.cases:
+
+            d = complement(a & b)
+            e = complement(a) | complement(b)
+
+            for point in self.points:
+
+                self.assertEqual(
+                        point in d,
+                        point in e)
 
     def second_law(self):
-        pass
+        for a, b, _ in self.cases:
+
+            d = complement(a | b)
+            e = complement(a) & complement(b)
+
+            for point in self.points:
+
+                self.assertEqual(
+                        point in d,
+                        point in e)
 
 
 class DistributiveTest(unittest.TestCase):
