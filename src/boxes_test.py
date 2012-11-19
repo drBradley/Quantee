@@ -7,23 +7,123 @@ import unittest
 from boxes import Box, Boxes
 
 
+CASE_COUNT = 10000
+
+MAX_X = MAX_Y = MAX_W = MAX_H = 100
+
+
+def complement(box):
+
+    if isinstance(box, Box):
+        b0 = Box(0, 0, box.x, MAX_Y + MAX_H)
+        b1 = Box(box.x, box.y + box.h, box.w, MAX_Y + MAX_H - box.y - box.h)
+        b2 = Box(box.x, 0, box.w, box.y)
+        b3 = Box(box.x + box.w, 0, MAX_X + MAX_W - box.x - box.w)
+
+        return b0 | b1 | b2 | b3
+
+    elif isinstance(box, Boxes):
+
+        everything = Box(0, 0, MAX_X + MAX_W, MAX_Y + MAX_H)
+
+        return reduce(lambda a, b: a & b, map(complement, box), everything)
+
+
 class UnionTest(unittest.TestCase):
     """Test whether set unions work properly"""
 
+    def setUp(self):
+        self.cases = []
+        for i in range(CASE_COUNT):
+            a = Box(
+                    random.randint(0, MAX_X),
+                    random.randint(0, MAX_Y),
+                    random.randint(0, MAX_W),
+                    random.randint(0, MAX_H))
+
+            b = Box(
+                    random.randint(0, MAX_X),
+                    random.randint(0, MAX_Y),
+                    random.randint(0, MAX_W),
+                    random.randint(0, MAX_H))
+
+            c = Box(
+                    random.randint(0, MAX_X),
+                    random.randint(0, MAX_Y),
+                    random.randint(0, MAX_W),
+                    random.randint(0, MAX_H))
+
+            self.cases.append((a, b, c))
+
+        self.points = []
+
+        for i in range(CASE_COUNT):
+            self.points.append((
+                    random.randint(0, MAX_X + MAX_W),
+                    random.randint(0, MAX_Y + MAX_H)))
+
     def test_associative(self):
-        pass
+
+        for a, b, c in self.cases:
+
+            d = (a | b) | c
+            e = a | (b | c)
+
+            for point in self.points:
+
+                self.assertEqual(point in d, point in e)
 
     def test_commutative(self):
-        pass
+
+        for a, b, _ in self.cases:
+
+            d = a | b
+            e = b | a
+
+            for point in self.points:
+
+                self.assertEqual(point in d, point in e)
 
     def test_complement(self):
-        pass
+
+        for case in self.cases:
+            for a in case:
+                d = a | complement(a)
+
+                for point in self.points:
+
+                    self.assertIn(point, d)
 
     def test_with_self(self):
-        pass
+
+        for case in self.cases:
+            for a in case:
+
+                d = a | a
+
+                for point in self.points:
+
+                    self.assertEqual(
+                            point in d,
+                            point in a)
 
     def test_with_subset(self):
-        pass
+
+        for case in self.cases:
+            for a in case:
+
+                if not (a.w >= 2 and a.h >= 2):
+                    continue
+
+                b = Box(a.x + 1, a.y + 1, a.w - 1, a.h - 1)
+
+                d = a | b
+
+                for point in self.points:
+
+                    self.assertEqual(
+                            point in d,
+                            point in a)
 
 
 class IntersectionTest(unittest.TestCase):
