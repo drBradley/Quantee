@@ -237,20 +237,60 @@ class DeMorganTest(unittest.TestCase):
 class DistributiveTest(unittest.TestCase):
     """Test whether the set operations are distributive, ie:
 
-        x | (y & z) = (x | y) & (x | z)
-        (x | y) & z = (x & z) | (y & z)
-        x & (y | z) = (x & y) | (x & z)
-        (x & y) | z = (x | z) & (y | z)
+        a | (b & c) = (a | b) & (a | c)
+        a & (b | c) = (a & b) | (a & c)
+        (a | b) & c = (a & c) | (b & c)
+        (a & b) | c = (a | c) & (b | c)
     """
 
     def union_left_distributive(self):
-        pass
+        
+        for a, b, c in self.cases:
+
+            l = a | (b & c)
+            r = (a | b) & (a | c)
+
+            for point in self.points:
+                
+                self.assertEqual(
+                        point in l,
+                        point in r)
 
     def intersection_left_distributive(self):
-        pass
+
+        for a, b, c in self.cases:
+
+            l = a & (b | c)
+            r = (a & b) | (a & c)
+
+            for point in self.points:
+                
+                self.assertEqual(
+                        point in l,
+                        point in r)
 
     def intersection_right_distributive(self):
-        pass
+
+        for a, b, c in self.cases:
+
+            l = (a & b) | c
+            r = (a | c) & (b | c)
+
+            for point in self.points:
+                
+                self.assertEqual(
+                        point in l,
+                        point in r)
 
     def union_right_distributive(self):
-        pass
+
+        for a, b, c in self.cases:
+
+            l = (a | b) & c
+            r = (a & c) | (b & c)
+
+            for point in self.points:
+                
+                self.assertEqual(
+                        point in l,
+                        point in r)
