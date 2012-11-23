@@ -42,7 +42,7 @@ class Entity(object):
             ed.b_box = Box(x, y, *b_box)
             ed.r_box = Box(x, y, *r_box)
 
-            self.__behaviour.prepare(ed)
+        self.__behaviour.prepare(self.__curr, self.__next)
 
     # Game logic
     @property
@@ -106,7 +106,9 @@ class Entity(object):
         pass.
         """
 
-        self.__parts_to_redraw.append(part)
+        if not self.__neds_redraw:
+
+            self.__needs_redraw = True
 
     def do_i_need_redraw(self, stage, viewport):
         """E.do_i_need_redraw(stage, viewport) -> True or False
@@ -148,4 +150,4 @@ class Entity(object):
 
         # FIXME: Implement drawing
 
-        self.__needs_redraw = []
+        self.__needs_redraw = False
