@@ -1,14 +1,10 @@
 # -*- coding: utf-8 -*-
 
 
-from collider import Collider
-
 __all__ = ['Box']
 
 
-
-
-class Box(Collider):
+class Box(object):
     """Box(x, y, w, h) -> a Box
 
     The simplest possible Collider.
