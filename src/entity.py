@@ -27,7 +27,7 @@ class Entity(object):
         self.__needs_redraw = False
 
         # Initialise the next and current state
-        for ed in [self.__next, self.__curr]:
+        for ed in (self.__next, self.__curr):
 
             ed.dead = False
             ed.state = state
@@ -36,6 +36,8 @@ class Entity(object):
             ed.v = (0, 0)
 
             x, y = pos
+            ed.x = x
+            ed.y = y
 
             ed.b_box = Box(x, y, *b_box)
             ed.r_box = Box(x, y, *r_box)
@@ -74,9 +76,9 @@ class Entity(object):
         """
 
         self.__behaviour.decide(
-                dt, event,
-                stage,
-                self.__curr, self.__next)
+            dt, event,
+            stage,
+            self.__curr, self.__next)
 
     def act(self):
         """E.act()
@@ -109,7 +111,16 @@ class Entity(object):
     def do_i_need_redraw(self, stage, viewport):
         """E.do_i_need_redraw(stage, viewport) -> True or False
 
-        This method checks whether the Entity needs a re-draw because of her own state of change"""
+        Check whether the Entity needs a re-draw because of her own change of
+        state.
+        """
+
+        sprite_changed = self.__curr.state != self.__next.state
+
+        position_changed = (self.__curr.x != self.__next.x or
+                            self.__curr.y != self.__next.y)
+
+        return sprite_changed or position_changed
 
     def who_else_to_redraw(self, stage, viewport):
         """E.who_else_to_redraw(stage, viewport) -> a set
@@ -124,6 +135,7 @@ class Entity(object):
                 # TODO:
                 #  - Check whether the other entity needs redrawing
                 #     - If yes, add it to the who_else set
+                pass
 
         return who_else
 
