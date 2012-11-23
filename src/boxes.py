@@ -15,6 +15,19 @@ def bounding(b1, b2):
     return Box(xcoors[0], ycoors[0], xcoors[-1] - xcoos[0], ycoors[-1] - ycoors[0])
 
 
+def collide(b1, b2):
+
+    if ((b2.x + b2.w <= b1.x or
+         b1.x + b1.w <= b2.x) and
+
+        (b2.y >= b1.x + b1.h or
+         b2.y + b2.h <= b1.y)):
+
+        return False
+
+    return True
+
+
 class Box(object):
     """Box(x, y, w, h) -> a Box
 
