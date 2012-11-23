@@ -61,7 +61,7 @@ class Stage(object):
 
             dead[name] = []
 
-            for i, entity in self.__layers[name]:
+            for i, entity in enumerate(self.__layers[name]):
 
                 if entity.dead:
 
@@ -75,7 +75,7 @@ class Stage(object):
 
             for i in dead[name]:
 
-                dead[name].pop(i)
+                self.__layers[name].pop(i)
 
     def add_spawn(self, entity, layer=None):
         """S.add_spawn(entity[, layer])
@@ -100,6 +100,8 @@ class Stage(object):
         for name in self.__layer_names:
 
             self.__layers[name].extend(self.__spawns[name])
+
+            self.__spawns[name] = []
 
     # Rendering
     def render(self, engine, viewport):
