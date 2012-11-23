@@ -4,6 +4,17 @@
 __all__ = ['Box']
 
 
+def bounding(b1, b2):
+
+    xcoors = [b1.x, b1.x + b1.w, b2.x, b2.x + b2.w]
+    ycoors = [b1.y, b1.y + b1.h, b2.y, b2.y + b2.h]
+
+    xcoors.sort();
+    ycoors.sort();
+
+    return Box(xcoors[0], ycoors[0], xcoors[-1] - xcoos[0], ycoors[-1] - ycoors[0])
+
+
 class Box(object):
     """Box(x, y, w, h) -> a Box
 
