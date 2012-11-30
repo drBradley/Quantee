@@ -9,10 +9,15 @@ def bounding(b1, b2):
     xcoors = [b1.x, b1.x + b1.w, b2.x, b2.x + b2.w]
     ycoors = [b1.y, b1.y + b1.h, b2.y, b2.y + b2.h]
 
-    xcoors.sort();
-    ycoors.sort();
+    xcoors.sort()
+    ycoors.sort()
 
-    return Box(xcoors[0], ycoors[0], xcoors[-1] - xcoos[0], ycoors[-1] - ycoors[0])
+    x = xcoors[0]
+    y = ycoors[0]
+    w = xcoors[-1] - xcoors[0]
+    h = ycoors[-1] - ycoors[0]
+
+    return Box(x, y, w, h)
 
 
 def collide(b1, b2):
