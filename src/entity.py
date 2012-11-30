@@ -52,6 +52,18 @@ class Entity(object):
         return self.__curr.pos
 
     @property
+    def b_box(self):
+        """E.b_box -> Box(0, 0, w, h)"""
+
+        return self.__curr.b_box
+
+    @property
+    def r_box(self):
+        """E.r_box -> Box(0, 0, w_r, h_r)"""
+
+        return self.__curr.r_box
+
+    @property
     def move(self):
         """E.move -> (dx, dy)"""
 
