@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-from boxes import Box
+from boxes import Box, collide
 
 __all__ = ['Entity']
 
@@ -118,7 +118,7 @@ class Entity(object):
         pass.
         """
 
-        if not self.__neds_redraw:
+        if not self.__needs_redraw:
 
             self.__needs_redraw = True
 
@@ -129,12 +129,35 @@ class Entity(object):
         state.
         """
 
+        # If it has already been determined, than obviously, yes the Entitiy
+        # needs to be redrawn
+        if self.__needs_redraw:
+
+            return True
+
+        # First, check if the Entity is visible at all
+        x, y = self.__curr.pos
+        r_box = self.__curr.r_box
+
+        r_box.move_by(x, y)
+
+        visible_at_all = collide(r_box, viewport)
+
+        r_box.move_by(-x, -y)
+
+        # Check the other requirements for redrawing
         sprite_changed = self.__curr.state != self.__next.state
 
         position_changed = (self.__curr.x != self.__next.x or
                             self.__curr.y != self.__next.y)
 
-        return sprite_changed or position_changed
+        # Conclude the reasoning
+        do_i = (sprite_changed or position_changed) and visible_at_all
+
+        if do_i:
+            self.force_redraw()
+
+        return do_i
 
     def who_else_to_redraw(self, stage, viewport):
         """E.who_else_to_redraw(stage, viewport) -> a set
