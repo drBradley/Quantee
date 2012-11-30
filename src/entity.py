@@ -25,6 +25,7 @@ class Entity(object):
         self.__curr = State()
 
         self.__needs_redraw = False
+        self.__seen_if_others_need_redraw = False
 
         # Initialise the next and current state
         for ed in (self.__next, self.__curr):
@@ -111,19 +112,19 @@ class Entity(object):
         return self.__curr.dead
 
     # Rendering
-    def force_redraw(self, part):
-        """E.force_redraw(part)
+    def force_redraw(self, viewport):
+        """E.force_redraw(viewport)
 
         Forces the Entity to re-draw a part of itself in the next rendering
         pass.
         """
 
-        if not self.__needs_redraw:
+        if not self.__needs_redraw and collide(self.r_box, viewport):
 
             self.__needs_redraw = True
 
-    def do_i_need_redraw(self, stage, viewport):
-        """E.do_i_need_redraw(stage, viewport) -> True or False
+    def do_i_need_redraw(self, viewport):
+        """E.do_i_need_redraw(viewport) -> True or False
 
         Check whether the Entity needs a re-draw because of her own change of
         state.
@@ -155,24 +156,28 @@ class Entity(object):
         do_i = (sprite_changed or position_changed) and visible_at_all
 
         if do_i:
-            self.force_redraw()
+            self.force_redraw(viewport)
 
         return do_i
 
-    def who_else_to_redraw(self, stage, viewport):
-        """E.who_else_to_redraw(stage, viewport) -> a set
+    def who_else_to_redraw(self, viewport):
+        """E.who_else_to_redraw(viewport) -> a set
 
         The Entities that will need redrawing if the current one will.
         """
 
-        who_else = set()
+        collides = self.__curr.collisions
+        collided = self.__next.collisions
 
-        for entity in stage:
-            if entity is not self:
-                # TODO:
-                #  - Check whether the other entity needs redrawing
-                #     - If yes, add it to the who_else set
-                pass
+        who_else = collides.symmetric_difference(collided)
+
+        if self.__needs_redraw and self.__seen_if_others_need_redraw:
+
+            for other in who_else:
+                other.force_redraw(viewport)
+                other.who_else_to_redraw(viewport)
+
+            self.__seen_if_others_need_redraw = True
 
         return who_else
 
@@ -186,3 +191,4 @@ class Entity(object):
         # FIXME: Implement drawing
 
         self.__needs_redraw = False
+        self.__seen_if_others_need_redraw = False
