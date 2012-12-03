@@ -171,7 +171,7 @@ class Entity(object):
 
         who_else = collides.symmetric_difference(collided)
 
-        if self.__needs_redraw and self.__seen_if_others_need_redraw:
+        if self.__needs_redraw and not self.__seen_if_others_need_redraw:
 
             for other in who_else:
                 other.force_redraw(viewport)
