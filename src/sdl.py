@@ -3,6 +3,7 @@
 
 import pygame
 
+from boxes import Box
 from engine import Engine
 
 __all__ = ['SDL', 'EventManager']
@@ -27,7 +28,7 @@ class SDL(Engine):
     """
 
     def __init__(self, title, screen_size, event_manager, fullscreen=False,
-            max_fps=32, use_busy_loop=False):
+                 max_fps=32, use_busy_loop=False):
 
         # Prerequisite initialisation
         super(SDL, self).__init__()
@@ -36,8 +37,8 @@ class SDL(Engine):
 
         # Prepare for rendering
         pygame.display.set_mode(
-                screen_size,
-                pygame.FULLSCREEN if fullscreen else 0)
+            screen_size,
+            pygame.FULLSCREEN if fullscreen else 0)
 
         self.__screen = pygame.display.get_surface()
 
@@ -83,6 +84,23 @@ class SDL(Engine):
 
         pygame.display.update()
 
+    # Coordinate system handling
+    def __transform(self, box, scale, viewport):
+        """SDL.__transform(box, scale, viewport) -> Box
+
+        Given a box in the stage's coordinate system, a viewport and a scaling
+        factor between units, return the equivalent box in the screen's
+        coordinate system.
+        """
+
+        # FIXME: Make it actually work!
+        n_box = Box(scale * box.x,
+                    scale * box.y,
+                    scale * box.h,
+                    scale * box.w)
+
+        return n_box
+
     # Rendering
     @property
     def screen_size(self):
@@ -104,7 +122,7 @@ class SDL(Engine):
         rendering library.
         """
 
-        raise NotImplementedError()
+        pass
 
 
 class EventManager(object):
