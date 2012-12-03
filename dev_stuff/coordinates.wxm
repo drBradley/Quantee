@@ -1,0 +1,55 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 12.09.0 ] */
+
+/* [wxMaxima: input   start ] */
+T: matrix(
+ [1,0,0,0,0],
+ [v_x,1,0,0,0], 
+ [v_y,0,1,0,0], 
+ [0,0,0,1,0], 
+ [0,0,0,0,1]
+);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+F : matrix(
+ [1,0,0,0,0], 
+ [0,1,0,0,0], 
+ [H,0,-1,0,-1], 
+ [0,0,0,1,0], 
+ [0,0,0,0,1]
+);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+S: matrix(
+ [s,0,0,0,0], 
+ [0,s,0,0,0], 
+ [0,0,s,0,0], 
+ [0,0,0,s,0], 
+ [0,0,0,0,s]
+);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+g2s: S . F . T;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+s2g: invert(g2s);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+b: matrix([1], [x], [y], [w], [h]);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+b_ : g2s . b;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+b__: s2g . b;
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$
