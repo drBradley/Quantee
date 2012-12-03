@@ -82,6 +82,7 @@ class SDL(Engine):
         applied on top of the display memory.
         """
 
+        # FIXME: Only update the blitted rectangles
         pygame.display.update()
 
     # Coordinate system handling
@@ -122,6 +123,9 @@ class SDL(Engine):
         rendering library.
         """
 
+        # Recalculate the coordinates
+        # Blit to self.__screen
+        # Remember which box was blitted
         pass
 
 
