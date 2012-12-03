@@ -188,7 +188,10 @@ class Entity(object):
         itself that need refreshing.
         """
 
-        # FIXME: Implement drawing
+        if self.__needs_redraw:
+            engine.draw(
+                self.pos,
+                self.state)
 
         self.__needs_redraw = False
         self.__seen_if_others_need_redraw = False
