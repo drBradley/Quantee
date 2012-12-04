@@ -124,6 +124,7 @@ class SDL(Engine):
         rendering library.
         """
 
+        # Get the sprite
         # Recalculate the coordinates
         # Blit to self.__screen
         # Remember which box was blitted
