@@ -96,11 +96,10 @@ class SDL(Engine):
         coordinate system.
         """
 
-        # FIXME: Make it actually work!
-        n_box = Box(scale * box.x,
-                    scale * box.y,
-                    scale * box.h,
-                    scale * box.w)
+        n_box = Box(scale * (box.x - viewport.x),
+                    scale * (viewport.h + viewport.y - box.y - box. h),
+                    scale * box.w,
+                    scale * box.h)
 
         return n_box
 
