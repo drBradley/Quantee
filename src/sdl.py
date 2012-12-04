@@ -45,6 +45,7 @@ class SDL(Engine):
         pygame.display.set_caption(title)
 
         self.__sprite_cache = {}
+        self.__blitted_boxes = []
 
         # Prepare the event system
         pygame.event.set_allowed(None)
@@ -82,8 +83,9 @@ class SDL(Engine):
         applied on top of the display memory.
         """
 
-        # FIXME: Only update the blitted rectangles
-        pygame.display.update()
+        if self.__blitted_boxes:
+            pygame.display.update()
+            self.__blitted_boxes = []
 
     # Coordinate system handling
     def __transform(self, box, scale, viewport):
