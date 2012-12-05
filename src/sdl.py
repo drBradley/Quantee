@@ -90,8 +90,8 @@ class SDL(Engine):
             self.__blitted_boxes = []
 
     # Coordinate system handling
-    def __transform(self, box, scale, viewport):
-        """SDL.__transform(box, scale, viewport) -> Box
+    def __to_screen_coords(self, box, scale, viewport):
+        """SDL.__to_screen_coords(box, scale, viewport) -> Box
 
         Given a box in the stage's coordinate system, a viewport and a scaling
         factor between units, return the equivalent box in the screen's
