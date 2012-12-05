@@ -17,6 +17,9 @@ sdist
 develop-eggs
 .installed.cfg
 
+# Frozen binaries
+quantee/
+
 # Installer logs
 pip-log.txt
 
