@@ -51,5 +51,9 @@ b_ : g2s . b;
 b__: s2g . b;
 /* [wxMaxima: input   end   ] */
 
+/* [wxMaxima: input   start ] */
+s2g . g2s;
+/* [wxMaxima: input   end   ] */
+
 /* Maxima can't load/batch files which end with a comment! */
 "Created with wxMaxima"$

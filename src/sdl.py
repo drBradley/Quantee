@@ -9,6 +9,9 @@ from engine import Engine
 __all__ = ['SDL', 'EventManager']
 
 
+SCALE = 1
+
+
 class SDL(Engine):
     """SDL(title, (width, height), event_manager[, fullscreen[, max_fps[,
     use_busy_loop]]]) -> the Engine
@@ -127,8 +130,8 @@ class SDL(Engine):
 
         return self.__screen.get_size()
 
-    def draw(self, pos, sprite_name, rect=None):
-        """SDL.draw((x, y), sprite_name[, Box(x_sub, y_sub, w_sub, h_sub)])
+    def draw(self, pos, sprite_name, viewport):
+        """SDL.draw((x, y), sprite_name, viewport)
 
         Draws the sprite named sprite_name at the (x, y) coordinates of the
         window.
@@ -142,10 +145,20 @@ class SDL(Engine):
         """
 
         # Get the sprite
+        sprite = self.__asset_manager.load_sprite(sprite_name)
+
         # Recalculate the coordinates
+        x, y = pos
+        coords = self.__to_screen_coords(self, Box(x, y, 0, 0), SCALE, viewport)
+
         # Blit to self.__screen
+        self.__screen.blit(sprite, (coords.x, coords.y))
+
         # Remember which box was blitted
-        pass
+        self.__blitted_boxes.append((coords.x,
+                                     coords.y,
+                                     coords.w,
+                                     coords.h))
 
 
 class AssetManager(object):
