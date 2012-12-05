@@ -27,13 +27,16 @@ class SDL(Engine):
         Defaults to False.
     """
 
-    def __init__(self, title, screen_size, event_manager, fullscreen=False,
+    def __init__(self, title, screen_size, asset_manager, event_manager, fullscreen=False,
                  max_fps=32, use_busy_loop=False):
 
         # Prerequisite initialisation
         super(SDL, self).__init__()
 
         pygame.init()
+
+        # Prepare the asset manager
+        self.__asset_manager = asset_manager
 
         # Prepare for rendering
         pygame.display.set_mode(
@@ -44,7 +47,6 @@ class SDL(Engine):
 
         pygame.display.set_caption(title)
 
-        self.__sprite_cache = {}
         self.__blitted_boxes = []
 
         # Prepare the event system
@@ -131,6 +133,26 @@ class SDL(Engine):
         pass
 
 
+class AssetManager(object):
+    """Abstract base class for AssetManagers."""
+
+    def load_sprite(self, name, no_cache=False):
+        """AM.load_sprite(name[, no_cache]) -> sprite
+
+        Load up a sprite, possibly with caching turned off.
+        """
+
+        raise NotImplementedError()
+
+    def clear_cache(self):
+        """AM.clear_cache()
+
+        Clear the cache, so that extraneous memory isn't used.
+        """
+
+        raise NotImplementedError()
+
+
 class EventManager(object):
     """Abstract base class for EventManagers."""
 
@@ -139,8 +161,7 @@ class EventManager(object):
         """EM.allowed
 
         Property, returning a list of allowed event types (configured per
-        class). Subclasses may decide to use a more sophisticated mechanism of
-        determining gets into it's value.
+        class).
         """
 
         raise NotImplementedError()
