@@ -105,6 +105,21 @@ class SDL(Engine):
 
         return n_box
 
+    def __to_stage_coords(self, box, scale, viewport):
+        """SDL.__to_stage_coords(box, scale, viewport) -> Box
+
+        Given a box in the screen's coordinate system, a viewport and a scaling
+        factor between units, return the equicalent box in the stage's
+        coordinate system.
+        """
+
+        n_box = Box((box.x + viewport.x) / scale,
+                    (viewport.h + viewport.y - box.y - box.h) / scale,
+                    box.w / scale,
+                    box.h / scale)
+
+        return n_box
+
     # Rendering
     @property
     def screen_size(self):
