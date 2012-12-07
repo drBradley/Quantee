@@ -21,13 +21,13 @@ class QAssets(AssetManager):
 
         self.__sprites = {}
 
-    def load_spirte(self, name, no_cache=False):
+    def load_sprite(self, name, no_cache=False):
 
         if name not in self.__sprites or no_cache:
 
             path = os.path.join(self.__asset_dir,
                                 'sprites',
-                                name)
+                                name + '.png')
 
             sprite = pygame.image.load(path).convert()
 
