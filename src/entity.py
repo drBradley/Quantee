@@ -24,7 +24,7 @@ class Entity(object):
         self.__next = State()
         self.__curr = State()
 
-        self.__needs_redraw = False
+        self.__needs_redraw = True
         self.__seen_if_others_need_redraw = False
 
         # Initialise the next and current state
@@ -43,6 +43,8 @@ class Entity(object):
             st.b_box = Box(x, y, *b_box)
             st.r_box = Box(x, y, *r_box)
 
+            st.collisions = set()
+
         self.__behaviour.prepare(self.__curr, self.__next)
 
     # Game logic
@@ -50,7 +52,7 @@ class Entity(object):
     def pos(self):
         """E.pos -> (x, y)"""
 
-        return self.__curr.pos
+        return (self.__curr.x, self.__curr.y)
 
     @property
     def b_box(self):
@@ -107,12 +109,12 @@ class Entity(object):
         Finds sprite collisions (needed by the rendering system).
         """
 
-        self.__curr.collisions = []
+        self.__curr.collisions = set()
 
         for entity in stage:
             if entity is not self:
                 if collide(entity.r_box, self.r_box):
-                    self.__curr.collisions.append(entity)
+                    self.__curr.collisions.add(entity)
 
     @property
     def dead(self):
@@ -150,7 +152,7 @@ class Entity(object):
             return True
 
         # First, check if the Entity is visible at all
-        x, y = self.__curr.pos
+        x, y = self.pos
         r_box = self.__curr.r_box
 
         r_box.move_by(x, y)
@@ -186,11 +188,11 @@ class Entity(object):
 
         if self.__needs_redraw and not self.__seen_if_others_need_redraw:
 
+            self.__seen_if_others_need_redraw = True
+
             for other in who_else:
                 other.force_redraw(viewport)
                 other.who_else_to_redraw(viewport)
-
-            self.__seen_if_others_need_redraw = True
 
         return who_else
 
@@ -204,7 +206,8 @@ class Entity(object):
         if self.__needs_redraw:
             engine.draw(
                 self.pos,
-                self.state)
+                self.state,
+                viewport)
 
         self.__needs_redraw = False
         self.__seen_if_others_need_redraw = False
