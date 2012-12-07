@@ -89,7 +89,7 @@ class SDL(Engine):
         """
 
         if self.__blitted_boxes:
-            pygame.display.update()
+            pygame.display.update(self.__blitted_boxes)
             self.__blitted_boxes = []
 
     # Coordinate system handling
