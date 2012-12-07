@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os.path
+import math
 
 import pygame
 
@@ -40,6 +41,59 @@ class Background(Entity):
             DoNothing())
 
 
+class MoveOverPath(Behaviour):
+    """MoveOverPath(speed, points) -> a Behaviour for objects following a path
+    and moving with a constant speed
+    """
+
+    def __init__(self, speed, points):
+
+        self.__speed = speed
+        self.__points = points
+        self.__heading_to = 0
+
+    def prepare(self, curr, next):
+        pass
+
+    def decide(self, dt, events, stage, curr, next):
+
+        # Calculate the next position
+        s = self.__speed
+        x, y = curr.x, curr.y
+        p, q = self.__points[self.__heading_to]
+
+        v_x = s * math.copysign(1, p - x)
+        v_y = s * math.copysign(1, q - y)
+
+        x += dt * v_x
+        y += dt * v_y
+
+        next.x, next. y = int(x), int(y)
+
+        # Turn, if close enough to the current crosshair point
+        if abs(x - p) <= s * dt and abs(y - q) <= s * dt:
+
+            if self.__heading_to + 1 < len(self.__points):
+
+                self.__heading_to += 1
+
+            else:
+
+                self.__heading_to = 0
+
+
+class SquareMover(Entity):
+
+    def __init__(self, sprite_name, points):
+
+        super(SquareMover, self).__init__(
+            (200, 100),
+            (30, 30),
+            (30, 30),
+            sprite_name,
+            MoveOverPath(.1, points))
+
+
 class DumbEnder(Ender):
     """DumbEnder() -> a dumb Ender
 
@@ -68,11 +122,25 @@ class DumbLevel(Level):
 
     def __init__(self):
 
+        # Get a cam and a stage
         cam = StaticCam(Box(0, 0, 640, 480))
         stage = Stage((400, 400), ['bg', 'movers'], 'movers')
 
+        # Spawn the entities
         stage.add_spawn(Background('bg'), 'bg')
 
+        stage.add_spawn(SquareMover('red_box', [
+            (100, 100),
+            (100, 300),
+            (300, 300),
+            (300, 100)]))
+
+        stage.add_spawn(SquareMover('green_box', [
+            (200, 10),
+            (10, 200),
+            (200, 200)]))
+
+        # Call the superclasses initialiser
         super(DumbLevel, self).__init__(cam, stage, DumbEnder())
 
 

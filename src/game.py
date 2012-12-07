@@ -28,8 +28,8 @@ class Game(object):
 
             # Perform a logical step of the game
             level = self.__levels[-1].step(
-                    dt,
-                    event)
+                dt,
+                event)
 
             if level is None:
                 self.__levels.pop()
