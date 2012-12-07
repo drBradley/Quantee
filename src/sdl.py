@@ -13,7 +13,7 @@ SCALE = 1
 
 
 class SDL(Engine):
-    """SDL(title, (width, height), event_manager[, fullscreen[, max_fps[,
+    """SDL(title, (width, height), asset_manager, event_manager[, fullscreen[, max_fps[,
     use_busy_loop]]]) -> the Engine
 
     Engine based on the PyGame binding to the SDL library.
@@ -30,8 +30,8 @@ class SDL(Engine):
         Defaults to False.
     """
 
-    def __init__(self, title, screen_size, asset_manager, event_manager, fullscreen=False,
-                 max_fps=32, use_busy_loop=False):
+    def __init__(self, title, screen_size, asset_manager, event_manager,
+                 fullscreen=False, max_fps=32, use_busy_loop=False):
 
         # Prerequisite initialisation
         super(SDL, self).__init__()
