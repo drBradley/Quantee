@@ -3,6 +3,8 @@
 
 import os
 
+import pygame
+
 from sdl import AssetManager
 
 __all__ = ['QAssets']
@@ -23,8 +25,13 @@ class QAssets(AssetManager):
 
         if name not in self.__sprites or no_cache:
 
-            # TODO: Load the sprite
-            pass
+            path = os.path.join(self.__asset_dir,
+                                'sprites',
+                                name)
+
+            sprite = pygame.image.load(path).convert()
+
+            self.__sprites[name] = sprite
 
         return self.__sprites[name]
 
