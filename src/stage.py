@@ -110,4 +110,9 @@ class Stage(object):
         Render the part of the stage described by viewport using the engine.
         """
 
-        # TODO: Implement
+        for entity in self:
+            entity.do_i_need_redraw(viewport)
+            entity.who_else_to_redraw(viewport)
+
+        for entity in self:
+            entity.draw(engine, viewport)
