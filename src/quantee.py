@@ -85,7 +85,15 @@ class QuanteeTheGame(Game):
 
     def __init__(self):
 
-        engine = SDL("Quantee", (640, 480), DumbManager())
+        asset_path = os.path.join(
+            os.path.dirname(os.path.abspath(__file__)),
+            '..',
+            'assets')
+
+        engine = SDL("Quantee",
+                     (640, 480),
+                     QAssets(asset_path),
+                     DumbManager())
 
         init_level = DumbLevel()
 
