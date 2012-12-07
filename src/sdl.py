@@ -149,7 +149,12 @@ class SDL(Engine):
 
         # Recalculate the coordinates
         x, y = pos
-        coords = self.__to_screen_coords(self, Box(x, y, 0, 0), SCALE, viewport)
+        coords = self.__to_screen_coords(Box(x,
+                                             y,
+                                             sprite.get_width(),
+                                             sprite.get_height()),
+                                         SCALE,
+                                         viewport)
 
         # Blit to self.__screen
         self.__screen.blit(sprite, (coords.x, coords.y))
