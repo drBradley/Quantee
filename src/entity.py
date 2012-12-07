@@ -28,20 +28,20 @@ class Entity(object):
         self.__seen_if_others_need_redraw = False
 
         # Initialise the next and current state
-        for ed in (self.__next, self.__curr):
+        for st in (self.__next, self.__curr):
 
-            ed.dead = False
-            ed.state = state
+            st.dead = False
+            st.state = state
 
-            ed.move = (0, 0)
-            ed.v = (0, 0)
+            st.move = (0, 0)
+            st.v = (0, 0)
 
             x, y = pos
-            ed.x = x
-            ed.y = y
+            st.x = x
+            st.y = y
 
-            ed.b_box = Box(x, y, *b_box)
-            ed.r_box = Box(x, y, *r_box)
+            st.b_box = Box(x, y, *b_box)
+            st.r_box = Box(x, y, *r_box)
 
         self.__behaviour.prepare(self.__curr, self.__next)
 
