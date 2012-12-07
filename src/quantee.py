@@ -8,11 +8,36 @@ from game import Game
 from level import Level
 from stage import Stage
 from ender import Ender
+from entity import Entity
+from behaviour import Behaviour
 from boxes import Box
-from cam import StaticCam
 
+from cam import StaticCam
 from assets import QAssets
 from sdl import SDL, EventManager
+
+
+class DoNothing(Behaviour):
+    """DoNothing() -> a Behaviour for static objects"""
+
+    def prepare(self, curr, next):
+        pass
+
+    def decide(self, dt, event, stage, curr, next):
+        pass
+
+
+class Background(Entity):
+    """Background(image_name) -> a still background image"""
+
+    def __init__(self, image_name):
+
+        super(Background, self).__init__(
+            (0, 0),
+            (400, 400),
+            (400, 400),
+            image_name,
+            DoNothing())
 
 
 class DumbEnder(Ender):
@@ -22,8 +47,6 @@ class DumbEnder(Ender):
     """
 
     def done(self, dt, event, stage):
-
-        print dt, event
 
         if event.type == pygame.QUIT:
 
@@ -46,7 +69,9 @@ class DumbLevel(Level):
     def __init__(self):
 
         cam = StaticCam(Box(0, 0, 640, 480))
-        stage = Stage((0, 0), ['no'], 'no')
+        stage = Stage((400, 400), ['bg', 'movers'], 'movers')
+
+        stage.add_spawn(Background('bg'), 'bg')
 
         super(DumbLevel, self).__init__(cam, stage, DumbEnder())
 
