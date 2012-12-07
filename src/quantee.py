@@ -1,16 +1,18 @@
 # -*- coding: utf-8 -*-
 
+import os.path
+
 import pygame
 
 from game import Game
-from sdl import SDL, EventManager
-
 from level import Level
 from stage import Stage
 from ender import Ender
-
-from cam import StaticCam
 from boxes import Box
+from cam import StaticCam
+
+from assets import QAssets
+from sdl import SDL, EventManager
 
 
 class DumbEnder(Ender):
@@ -57,8 +59,8 @@ class DumbManager(EventManager):
     """
 
     __allowed = [
-            pygame.QUIT,
-            pygame.NOEVENT]
+        pygame.QUIT,
+        pygame.NOEVENT]
 
     @property
     def allowed(self):
