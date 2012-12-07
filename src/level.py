@@ -44,6 +44,9 @@ class Level(object):
         """L.render(engine)
 
         Draw the visible part of the level on screen.
-       """
+        """
+
+        for entity in self.__stage:
+            entity.find_sprite_collisions(self.__stage)
 
         self.__stage.render(engine, self.__cam.viewport(self.__stage))

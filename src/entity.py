@@ -88,15 +88,6 @@ class Entity(object):
         Decide what to do in the current step.
         """
 
-        # Find the objects with colliding sprites
-        self.__curr.collisions = []
-
-        for entity in stage:
-            if entity is not self:
-                if collide(entity.r_box, self.r_box):
-                    self.__curr.collisions.append(entity)
-
-        # Make up your mind, my Entity!
         self.__behaviour.decide(
             dt, event,
             stage,
@@ -109,6 +100,19 @@ class Entity(object):
         """
 
         self.__next, self.__curr = self.__curr, self.__next
+
+    def find_sprite_collisions(self, stage):
+        """E.find_sprite_collisions(stage)
+
+        Finds sprite collisions (needed by the rendering system).
+        """
+
+        self.__curr.collisions = []
+
+        for entity in stage:
+            if entity is not self:
+                if collide(entity.r_box, self.r_box):
+                    self.__curr.collisions.append(entity)
 
     @property
     def dead(self):
