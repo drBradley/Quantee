@@ -110,9 +110,36 @@ class Stage(object):
         Render the part of the stage described by viewport using the engine.
         """
 
-        for entity in self:
-            entity.do_i_need_redraw(viewport)
-            entity.who_else_to_redraw(viewport)
+        redraw, maybe = set(), set()
 
         for entity in self:
-            entity.draw(engine, viewport)
+
+            if entity.needs_redraw(viewport):
+
+                redraw.add(entity)
+
+            else:
+
+                maybe.add(entity)
+
+        any_new = True
+
+        while any_new:
+
+            any_new = False
+
+            for entity in maybe:
+
+                if entity.needs_redraw(viewport, redraw):
+
+                    redraw.add(entity)
+
+                    any_new = True
+
+            maybe.difference_update(redraw)
+
+        for entity in self:
+
+            if entity in redraw:
+
+                entity.draw(engine, viewport)
