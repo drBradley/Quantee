@@ -84,6 +84,25 @@ class Entity(object):
 
         self.__behaviour.prepare(self.__curr, self.__next)
 
+    # State exposers
+    def present(self):
+        """E.present() -> a StateWrapper
+
+        Returns an object giving access to the current state of the Entity
+        through getters.
+        """
+
+        return self.__curr_wrap
+
+    def past(self):
+        """E.past() -> a StateWrapper
+
+        Returns an object giving access to the previous state of the Entity
+        through getters.
+        """
+
+        return self.__prev_wrap
+
     # Behaviour
     def decide(self, dt, event, stage):
         """E.decide(dt, event, stage)
