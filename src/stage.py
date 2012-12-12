@@ -110,6 +110,8 @@ class Stage(object):
         Render the part of the stage described by viewport using the engine.
         """
 
+        # Separate the entities clearly needing a redraw and the ones that
+        # might need it
         redraw, maybe = set(), set()
 
         for entity in self:
@@ -122,6 +124,7 @@ class Stage(object):
 
                 maybe.add(entity)
 
+        # Find all those who need redraw amongst those who might
         any_new = True
 
         while any_new:
@@ -138,6 +141,7 @@ class Stage(object):
 
             maybe.difference_update(redraw)
 
+        # Redraw only those who need it
         for entity in self:
 
             if entity in redraw:
