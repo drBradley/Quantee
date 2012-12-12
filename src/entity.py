@@ -65,7 +65,7 @@ class Entity(object):
         self.__seen_if_others_need_redraw = False
 
         # Initialise the next and current state
-        for st in (self.__next, self.__curr):
+        for st in (self.__next, self.__curr, self.__prev):
 
             st.dead = False
             st.state = state
@@ -113,7 +113,7 @@ class Entity(object):
         self.__behaviour.decide(
             dt, event,
             stage,
-            self.__curr, self.__next)
+            self.__prev, self.__curr, self.__next)
 
     def act(self):
         """E.act()
@@ -121,7 +121,10 @@ class Entity(object):
         Execute the actions chosen upon the last call to decide.
         """
 
-        self.__next, self.__curr = self.__curr, self.__next
+        self.__next, self.__curr, self.__prev = (
+            self.__curr,
+            self.__prev,
+            self.__next)
 
     # Rendering
     def needs_redraw(self, viewport, others=set()):

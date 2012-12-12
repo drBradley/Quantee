@@ -24,7 +24,7 @@ class DoNothing(Behaviour):
     def prepare(self, curr, next):
         pass
 
-    def decide(self, dt, event, stage, curr, next):
+    def decide(self, dt, event, stage, prev, curr, next):
         pass
 
 
@@ -55,7 +55,7 @@ class MoveOverPath(Behaviour):
     def prepare(self, curr, next):
         pass
 
-    def decide(self, dt, events, stage, curr, next):
+    def decide(self, dt, events, stage, prev, curr, next):
 
         # Calculate the next position
         s = self.__speed
