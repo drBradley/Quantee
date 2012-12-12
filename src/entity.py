@@ -134,19 +134,6 @@ class Entity(object):
 
         self.__next, self.__curr = self.__curr, self.__next
 
-    def find_sprite_collisions(self, stage):
-        """E.find_sprite_collisions(stage)
-
-        Finds sprite collisions (needed by the rendering system).
-        """
-
-        self.__curr.collisions = set()
-
-        for entity in stage:
-            if entity is not self:
-                if collide(entity.r_box, self.r_box):
-                    self.__curr.collisions.add(entity)
-
     @property
     def dead(self):
         """E.dead -> True or False
@@ -158,74 +145,18 @@ class Entity(object):
         return self.__curr.dead
 
     # Rendering
-    def force_redraw(self, viewport):
-        """E.force_redraw(viewport)
+    def needs_redraw(self, viewport, others=set()):
+        """E.needs_redraw(viewport[, others])
 
-        Forces the Entity to re-draw a part of itself in the next rendering
-        pass.
+        See if the entity needs to be redrawn. The optional argument others is
+        a set of other entities which do need to be redrawn -- if something
+        colliding with the current one does, so does it.
         """
 
-        if not self.__needs_redraw and collide(self.r_box, viewport):
-
-            self.__needs_redraw = True
-
-    def do_i_need_redraw(self, viewport):
-        """E.do_i_need_redraw(viewport) -> True or False
-
-        Check whether the Entity needs a re-draw because of her own change of
-        state.
-        """
-
-        # If it has already been determined, than obviously, yes the Entitiy
-        # needs to be redrawn
-        if self.__needs_redraw:
-
+        if collide(self.__next.r_box, viewport):
             return True
 
-        # First, check if the Entity is visible at all
-        x, y = self.pos
-        r_box = self.__curr.r_box
-
-        r_box.move_by(x, y)
-
-        visible_at_all = collide(r_box, viewport)
-
-        r_box.move_by(-x, -y)
-
-        # Check the other requirements for redrawing
-        sprite_changed = self.__curr.state != self.__next.state
-
-        position_changed = (self.__curr.x != self.__next.x or
-                            self.__curr.y != self.__next.y)
-
-        # Conclude the reasoning
-        do_i = (sprite_changed or position_changed) and visible_at_all
-
-        if do_i:
-            self.force_redraw(viewport)
-
-        return do_i
-
-    def who_else_to_redraw(self, viewport):
-        """E.who_else_to_redraw(viewport) -> a set
-
-        The Entities that will need redrawing if the current one will.
-        """
-
-        collides = self.__curr.collisions
-        collided = self.__next.collisions
-
-        who_else = collides.symmetric_difference(collided)
-
-        if self.__needs_redraw and not self.__seen_if_others_need_redraw:
-
-            self.__seen_if_others_need_redraw = True
-
-            for other in who_else:
-                other.force_redraw(viewport)
-                other.who_else_to_redraw(viewport)
-
-        return who_else
+        return False
 
     def draw(self, engine, viewport):
         """E.draw(engine, viewport)
@@ -234,11 +165,7 @@ class Entity(object):
         itself that need refreshing.
         """
 
-        if self.__needs_redraw:
-            engine.draw(
-                self.pos,
-                self.state,
-                viewport)
-
-        self.__needs_redraw = False
-        self.__seen_if_others_need_redraw = False
+        engine.draw(
+            self.pos,
+            self.state,
+            viewport)
