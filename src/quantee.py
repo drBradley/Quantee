@@ -100,13 +100,17 @@ class SquareMover(Entity):
 class DumbEnder(Ender):
     """DumbEnder() -> a dumb Ender
 
-    Ends on a pygame.QUIT event and returns None as the next Level.
+    Ends the level, returning to the previous one when the window is closed or
+    ESC is pressed.
     """
 
     def done(self, dt, event, stage):
 
         if event.type == pygame.QUIT:
 
+            return True
+
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
             return True
 
         return False
@@ -150,13 +154,14 @@ class DumbLevel(Level):
 class DumbManager(EventManager):
     """DumbManager() -> a dumb EventManager
 
-    It allows for the presence of QUIT and NOEVENT pygame events and passes
-    them on unmodified.
+    It allows for the presence of QUIT, NOEVENT and KEYDOWN pygame events and
+    passes them on unmodified.
     """
 
     __allowed = [
         pygame.QUIT,
-        pygame.NOEVENT]
+        pygame.NOEVENT,
+        pygame.KEYDOWN]
 
     @property
     def allowed(self):
