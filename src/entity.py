@@ -122,9 +122,9 @@ class Entity(object):
         """
 
         self.__next, self.__curr, self.__prev = (
-            self.__curr,
             self.__prev,
-            self.__next)
+            self.__next,
+            self.__curr)
 
     # Rendering
     def needs_redraw(self, viewport, others=set()):
