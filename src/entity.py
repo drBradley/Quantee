@@ -39,6 +39,10 @@ class StateWrapper(object):
 
         return self.__state.state
 
+    def dead(self):
+
+        return self.__state.dead
+
 
 class Entity(object):
     """Entity class, used to represent all in-game objects."""
