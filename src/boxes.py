@@ -65,3 +65,12 @@ class Box(object):
 
         self.x += dx
         self.y += dy
+
+    def move_to(self, x, y):
+        """B.move_to(x, y)
+
+        Moves the box to a given position.
+        """
+
+        self.x = x
+        self.y = y
