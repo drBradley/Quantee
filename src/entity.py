@@ -13,16 +13,47 @@ class State(object):
     """
 
 
+class StateWrapper(object):
+    """StateWrapper(State) -> a state wrapper
+
+    Used to expose only a subset of a State's fields.
+    """
+
+    def __init__(self, state):
+
+        self.__state = state
+
+    def b_box(self):
+
+        return self.__state.b_box
+
+    def r_box(self):
+
+        return self.__state.r_box
+
+    def v(self):
+
+        return self.__state.v
+
+    def state_name(self):
+
+        return self.__state.state
+
+
 class Entity(object):
     """Entity class, used to represent all in-game objects."""
 
-    def __init__(self, pos, b_box, r_box, state, behaviour):
+    def __init__(self, pos, b_box, r_box, state, behaviour,
+                 wrapper=StateWrapper):
 
         # Initialise the fields
         self.__behaviour = behaviour
 
         self.__next = State()
         self.__curr = State()
+
+        self.__next_wrap = StateWrapper(self.__next)
+        self.__curr_wrap = StateWrapper(self.__curr)
 
         self.__needs_redraw = True
         self.__seen_if_others_need_redraw = False
