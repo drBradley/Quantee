@@ -55,9 +55,11 @@ class Entity(object):
 
         self.__next = State()
         self.__curr = State()
+        self.__prev = State()
 
         self.__next_wrap = StateWrapper(self.__next)
         self.__curr_wrap = StateWrapper(self.__curr)
+        self.__prev_wrap = StateWrapper(self.__prev)
 
         self.__needs_redraw = True
         self.__seen_if_others_need_redraw = False
@@ -82,43 +84,7 @@ class Entity(object):
 
         self.__behaviour.prepare(self.__curr, self.__next)
 
-    # Game logic
-    @property
-    def pos(self):
-        """E.pos -> (x, y)"""
-
-        return (self.__curr.x, self.__curr.y)
-
-    @property
-    def b_box(self):
-        """E.b_box -> Box(0, 0, w, h)"""
-
-        return self.__curr.b_box
-
-    @property
-    def r_box(self):
-        """E.r_box -> Box(0, 0, w_r, h_r)"""
-
-        return self.__curr.r_box
-
-    @property
-    def move(self):
-        """E.move -> (dx, dy)"""
-
-        return self.__curr.move
-
-    @property
-    def v(self):
-        """E.v -> (v_x, v_y)"""
-
-        return self.__curr.v
-
-    @property
-    def state(self):
-        """E.state -> name of sprite to use for rendering"""
-
-        return self.__curr.state
-
+    # Behaviour
     def decide(self, dt, event, stage):
         """E.decide(dt, event, stage)
 
@@ -137,16 +103,6 @@ class Entity(object):
         """
 
         self.__next, self.__curr = self.__curr, self.__next
-
-    @property
-    def dead(self):
-        """E.dead -> True or False
-
-        Tell whether the Entity is dead or alive. Dead Entities get
-        harvested by the Level.
-        """
-
-        return self.__curr.dead
 
     # Rendering
     def needs_redraw(self, viewport, others=set()):
