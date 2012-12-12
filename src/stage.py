@@ -63,7 +63,7 @@ class Stage(object):
 
             for i, entity in enumerate(self.__layers[name]):
 
-                if entity.dead:
+                if entity.present().dead():
 
                     dead[name].insert(0, i)
 
