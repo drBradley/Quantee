@@ -147,7 +147,11 @@ class Entity(object):
         itself that need refreshing.
         """
 
+        r_box = self.present().r_box()
+
+        pos = (r_box.x, r_box.y)
+
         engine.draw(
-            self.pos,
-            self.state,
+            pos,
+            self.present().state_name(),
             viewport)
