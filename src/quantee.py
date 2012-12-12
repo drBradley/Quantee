@@ -31,10 +31,10 @@ class DoNothing(Behaviour):
 class Background(Entity):
     """Background(image_name) -> a still background image"""
 
-    def __init__(self, image_name):
+    def __init__(self, x, y, image_name):
 
         super(Background, self).__init__(
-            (0, 0),
+            (x, y),
             (400, 400),
             (400, 400),
             image_name,
@@ -134,7 +134,9 @@ class DumbLevel(Level):
         stage = Stage((400, 400), ['bg', 'movers'], 'movers')
 
         # Spawn the entities
-        stage.add_spawn(Background('bg'), 'bg')
+        stage.add_spawn(Background(0, 0, 'bg'), 'bg')
+
+        stage.add_spawn(Background(410, 410, 'bg'), 'bg')
 
         stage.add_spawn(SquareMover('red_box', [
             (100, 100),
@@ -146,6 +148,8 @@ class DumbLevel(Level):
             (200, 10),
             (10, 200),
             (200, 200)]))
+
+        stage.spawn()
 
         # Call the superclasses initialiser
         super(DumbLevel, self).__init__(cam, stage, DumbEnder())

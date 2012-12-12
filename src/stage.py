@@ -142,8 +142,13 @@ class Stage(object):
             maybe.difference_update(redraw)
 
         # Redraw only those who need it
+        count = 0
+
         for entity in self:
 
             if entity in redraw:
 
+                count += 1
                 entity.draw(engine, viewport)
+
+        print "Redrawn %d entities" % count
