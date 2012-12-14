@@ -70,8 +70,8 @@ class MoveOverPath(Behaviour):
 
         next.x, next. y = x, y
 
-        next.b_box.move_to(next.x, next.y)
-        next.r_box.move_to(next.x, next.y)
+        next.b_box.move_to(x, y)
+        next.r_box.move_to(x, y)
 
         # Turn, if close enough to the current crosshair point
         if abs(x - p) <= s * dt and abs(y - q) <= s * dt:
