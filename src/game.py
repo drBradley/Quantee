@@ -27,15 +27,10 @@ class Game(object):
             event, dt = self.__engine.input()
 
             # Perform a logical step of the game
-            level = self.__levels[-1].step(
+             self.__levels[-1].step(
                 dt,
-                event)
-
-            if level is None:
-                self.__levels.pop()
-
-            elif level is not self.__levels[-1]:
-                self.__levels.append(level)
+                event,
+                self.__levels)
 
             # Let the engine do whatever it needs to
             self.__engine.update()
