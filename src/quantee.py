@@ -100,24 +100,22 @@ class SquareMover(Entity):
 class DumbEnder(Ender):
     """DumbEnder() -> a dumb Ender
 
-    Ends the level, returning to the previous one when the window is closed or
-    ESC is pressed.
+    Ends the whole game when the window is closed or ESC is pressed.
     """
 
-    def done(self, dt, event, stage):
+    def done(self, dt, event, stage, levels):
 
-        if event.type == pygame.QUIT:
+        if (event.type == pygame.QUIT or
 
-            return True
+                (event.type == pygame.KEYDOWN and
+                 event.key == pygame.K_ESCAPE)):
 
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+            for i in range(len(levels)):
+                levels.pop()
+
             return True
 
         return False
-
-    def next_level(self):
-
-        return None
 
 
 class DumbLevel(Level):
