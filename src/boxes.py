@@ -53,6 +53,17 @@ class Box(object):
         return (self.x <= x_p <= self.x + self.w and
                 self.y <= y_p <= self.y + self.h)
 
+    def __eq__(self, other):
+
+        return (self.x == other.x and
+                self.y == other.y and
+                self.w == other.w and
+                self.h == other.h)
+
+    def __ne__(self, other):
+
+        return not self == other
+
     def __str__(self):
 
         return "Box(%(x)d, %(y)d, %(w)d, %(h)d)" % self.__dict__
