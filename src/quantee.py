@@ -68,7 +68,7 @@ class MoveOverPath(Behaviour):
         x += dt * v_x
         y += dt * v_y
 
-        next.x, next. y = int(x), int(y)
+        next.x, next. y = x, y
 
         next.b_box.move_to(next.x, next.y)
         next.r_box.move_to(next.x, next.y)
