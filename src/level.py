@@ -14,30 +14,22 @@ class Level(object):
         self.__ender = ender
 
     # Game logic
-    def step(self, dt, event):
-        """L.step(dt, event) -> a Level or None
+    def step(self, dt, event, levels):
+        """L.step(dt, event, levels)
 
-        Unless the level has finished, performs a logical step and
-        returns itself. Otherwise -- returns a new level or None.
+        Performs a logical step.
         """
 
-        # If the level is done, return the next one
-        if self.__ender.done(dt, event, self.__stage):
+        if not self.__ender.done(dt, event, self.__stage, levels):
 
-            return self.__ender.next_level()
+            for entity in self.__stage:
+                entity.decide(dt, event, self.__stage)
 
-        # Perform a logical game step
-        for entity in self.__stage:
-            entity.decide(dt, event, self.__stage)
+            for entity in self.__stage:
+                entity.act()
 
-        for entity in self.__stage:
-            entity.act()
-
-        self.__stage.harvest_dead()
-        self.__stage.spawn()
-
-        # Continue the current level
-        return self
+            self.__stage.harvest_dead()
+            self.__stage.spawn()
 
     # Rendering
     def render(self, engine):
