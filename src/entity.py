@@ -61,8 +61,7 @@ class Entity(object):
         self.__curr_wrap = StateWrapper(self.__curr)
         self.__prev_wrap = StateWrapper(self.__prev)
 
-        self.__needs_redraw = True
-        self.__seen_if_others_need_redraw = False
+        self.__was_drawn = False
 
         # Initialise the next and current state
         for st in (self.__next, self.__curr, self.__prev):
@@ -137,6 +136,13 @@ class Entity(object):
 
         # Something that isn't on screen never needs to be redrawn
         if collide(self.__next.r_box, viewport):
+
+            # Force the drawing of new Entities first time they apppear on
+            # screen
+            if not self.__was_drawn:
+
+                self.__was_drawn = True
+                return True
 
             # See if a redraw is necessary due to changes in the entity itself
             moved = self.present().r_box() != self.past().r_box()
