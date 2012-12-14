@@ -11,11 +11,10 @@ class Ender(object):
     Level (if any) should the Game run afterwards.
     """
 
-    def done(self, dt, event, stage):
-        """E.done(dt, event, stage) -> True or False
+    def done(self, dt, event, stage, levels):
+        """E.done(dt, event, stage, levels) -> True or False
 
-        Decides whether an Level should end.
+        Decides whether an Level should end and if so alters the level stack.
         """
 
-    def next_level(self):
-        """E.next_level() -> another Level or None"""
+        raise NotImplementedError()
