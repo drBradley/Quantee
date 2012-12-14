@@ -125,6 +125,11 @@ class Entity(object):
             self.__next,
             self.__curr)
 
+        self.__next_wrap, self.__curr_wrap, self.__prev_wrap = (
+            self.__prev_wrap,
+            self.__next_wrap,
+            self.__curr_wrap)
+
     # Rendering
     def needs_redraw(self, viewport, others=set()):
         """E.needs_redraw(viewport[, others])
