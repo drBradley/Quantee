@@ -146,7 +146,9 @@ class Entity(object):
 
             # See if a redraw is necessary due to changes in the entity itself
             moved = self.present().r_box() != self.past().r_box()
-            sprite_changed = self.present().state_name() != self.past().state_name()
+
+            sprite_changed = \
+                self.present().state_name() != self.past().state_name()
 
             if moved or sprite_changed:
                 return True
