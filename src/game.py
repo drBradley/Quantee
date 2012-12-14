@@ -27,7 +27,7 @@ class Game(object):
             event, dt = self.__engine.input()
 
             # Perform a logical step of the game
-             self.__levels[-1].step(
+            self.__levels[-1].step(
                 dt,
                 event,
                 self.__levels)
