@@ -6,9 +6,13 @@ __all__ = ['Game']
 class Game(object):
     """Base class for games."""
 
-    def __init__(self, engine, init_level):
+    def __init__(self, engine, init_level, timestep=1000/60,
+                 max_steps_per_render=100):
 
         self.__engine = engine
+
+        self.__timestep = timestep
+        self.__max_steps_per_render = max_steps_per_render
 
         self.__levels = [init_level]
 
@@ -18,19 +22,33 @@ class Game(object):
         Run the Game.
         """
 
+        # Prepare for time-handling
+        max_steps_per_render = self.__max_steps_per_render
+        timestep = self.__timestep
+        time_left = 0
+
         # Until the game stops, iterate over the events
         while len(self.__levels) > 0:
 
-            # Render the level and get new input
+            # Render the level and get new input along with the render time
             self.__levels[-1].render(self.__engine)
 
             event, dt = self.__engine.input()
 
-            # Perform a logical step of the game
-            self.__levels[-1].step(
-                dt,
-                event,
-                self.__levels)
+            # Perform enough logical steps of the game to cover the rendering
+            # time
+            time_left += dt
+            steps = 0
+
+            while time_left >= dt and steps < max_steps_per_render:
+
+                self.__levels[-1].step(
+                    timestep,
+                    event if steps == 0 else None,
+                    self.__levels)
+
+                steps += 1
+                time_left -= timestep
 
             # Let the engine do whatever it needs to
             self.__engine.update()

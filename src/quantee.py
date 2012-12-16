@@ -105,10 +105,11 @@ class DumbEnder(Ender):
 
     def done(self, dt, event, stage, levels):
 
-        if (event.type == pygame.QUIT or
+        if (event is not None and
+                (event.type == pygame.QUIT or
 
                 (event.type == pygame.KEYDOWN and
-                 event.key == pygame.K_ESCAPE)):
+                 event.key == pygame.K_ESCAPE))):
 
             for i in range(len(levels)):
                 levels.pop()
