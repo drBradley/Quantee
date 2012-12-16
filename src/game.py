@@ -6,7 +6,7 @@ __all__ = ['Game']
 class Game(object):
     """Base class for games."""
 
-    def __init__(self, engine, init_level, timestep=1000/60,
+    def __init__(self, engine, init_level, timestep=1000 / 60,
                  max_steps_per_render=100):
 
         self.__engine = engine
