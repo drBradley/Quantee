@@ -64,8 +64,8 @@ class SDL(Engine):
         self.__use_busy_loop = use_busy_loop
 
     # Input and time
-    def input(self):
-        """SDL.input() -> an Event or None"""
+    def dt(self):
+        """SDL.dt() -> time it took to render the last frame"""
 
         if self.__use_busy_loop:
 
@@ -75,10 +75,15 @@ class SDL(Engine):
 
             dt = self.__clock.tick(self.__max_fps)
 
+        return dt
+
+    def input(self):
+        """SDL.input() -> an Event or None"""
+
         raw_event = pygame.event.poll()
         event = self.__event_manager.transform(raw_event)
 
-        return event, dt
+        return event
 
     def update(self):
         """SDL.update()

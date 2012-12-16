@@ -13,10 +13,13 @@ class Engine(object):
         self.__prev = time.time()
 
     # Input and time
-    def input(self):
-        """E.input() -> (an Event or None, dt)"""
+    def dt(self):
+        return time.time() - self.__prev
 
-        return (None, time.time() - self.__prev)
+    def input(self):
+        """E.input() -> an Event or None"""
+
+        return None
 
     def update(self):
         """E.update()

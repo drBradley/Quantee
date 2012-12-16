@@ -30,10 +30,10 @@ class Game(object):
         # Until the game stops, iterate over the events
         while len(self.__levels) > 0:
 
-            # Render the level and get new input along with the render time
+            # Render the level and get the render time
             self.__levels[-1].render(self.__engine)
 
-            event, dt = self.__engine.input()
+            dt = self.__engine.dt()
 
             # Perform enough logical steps of the game to cover the rendering
             # time
@@ -42,9 +42,11 @@ class Game(object):
 
             while time_left >= dt and steps < max_steps_per_render:
 
+                event = self.__engine.input()
+
                 self.__levels[-1].step(
                     timestep,
-                    event if steps == 0 else None,
+                    event,
                     self.__levels)
 
                 steps += 1
