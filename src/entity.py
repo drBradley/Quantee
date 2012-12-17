@@ -69,17 +69,10 @@ class Entity(object):
             st.dead = False
             st.state = state
 
-            st.move = (0, 0)
             st.v = (0, 0)
-
-            x, y = pos
-            st.x = x
-            st.y = y
 
             st.b_box = Box(x, y, *b_box)
             st.r_box = Box(x, y, *r_box)
-
-            st.collisions = set()
 
         self.__behaviour.prepare(self.__prev, self.__curr, self.__next)
 

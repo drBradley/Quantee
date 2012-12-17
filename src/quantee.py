@@ -46,14 +46,20 @@ class MoveOverPath(Behaviour):
     and moving with a constant speed
     """
 
-    def __init__(self, speed, points):
+    def __init__(self, speed, points, die_after=None):
 
         self.__speed = speed
         self.__points = points
         self.__heading_to = 0
+        self.__die_after = die_after
 
     def prepare(self, prev, curr, next):
-        pass
+
+        die_after = self.__die_after
+
+        prev.passed = die_after
+        curr.passed = die_after - 1 if die_after is not None else die_after
+        next.passed = die_after - 1 if die_after is not None else die_after
 
     def decide(self, dt, events, stage, prev, curr, next):
 
@@ -84,17 +90,26 @@ class MoveOverPath(Behaviour):
 
                 self.__heading_to = 0
 
+        # Die if an aproriate amount of steps has passed
+        if curr.passed is not None:
+
+            if curr.passed == 0:
+                next.dead = True
+
+            else:
+                next.passed = curr.passed - 1
+
 
 class SquareMover(Entity):
 
-    def __init__(self, sprite_name, points):
+    def __init__(self, sprite_name, points, die_after=None):
 
         super(SquareMover, self).__init__(
             (200, 100),
             (30, 30),
             (30, 30),
             sprite_name,
-            MoveOverPath(.1, points))
+            MoveOverPath(.1, points, die_after))
 
 
 class DumbEnder(Ender):
@@ -141,12 +156,13 @@ class DumbLevel(Level):
             (100, 100),
             (100, 300),
             (300, 300),
-            (300, 100)]))
+            (300, 100)],
+            500))
 
-        stage.add_spawn(SquareMover('green_box', [
-            (200, 10),
-            (10, 200),
-            (200, 200)]))
+        #stage.add_spawn(SquareMover('green_box', [
+        #    (200, 10),
+        #    (10, 200),
+        #    (200, 200)]))
 
         stage.spawn()
 
