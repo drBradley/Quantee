@@ -155,7 +155,7 @@ class DumbLevel(Level):
             (100, 300),
             (300, 300),
             (300, 100)],
-            500))
+            150))
 
         #stage.add_spawn(SquareMover('green_box', [
         #    (200, 10),
