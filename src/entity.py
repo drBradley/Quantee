@@ -81,7 +81,7 @@ class Entity(object):
 
             st.collisions = set()
 
-        self.__behaviour.prepare(self.__curr, self.__next)
+        self.__behaviour.prepare(self.__prev, self.__curr, self.__next)
 
     # State exposers
     def present(self):

@@ -21,7 +21,7 @@ from sdl import SDL, EventManager
 class DoNothing(Behaviour):
     """DoNothing() -> a Behaviour for static objects"""
 
-    def prepare(self, curr, next):
+    def prepare(self, prev, curr, next):
         pass
 
     def decide(self, dt, event, stage, prev, curr, next):
@@ -52,7 +52,7 @@ class MoveOverPath(Behaviour):
         self.__points = points
         self.__heading_to = 0
 
-    def prepare(self, curr, next):
+    def prepare(self, prev, curr, next):
         pass
 
     def decide(self, dt, events, stage, prev, curr, next):

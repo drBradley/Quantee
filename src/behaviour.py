@@ -3,7 +3,7 @@
 
 class Behaviour(object):
 
-    def prepare(self, curr, next):
+    def prepare(self, prev, curr, next):
 
         raise NotImplementedError()
 
