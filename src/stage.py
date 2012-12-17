@@ -31,7 +31,7 @@ class Stage(object):
             self.__spawns[layer] = []
 
         # To properly render everything we need to keep track of what dies
-        self.__dead = set()
+        self.__dirty = set()
 
     def __iter__(self):
         """S.__iter__() <=> iter(S)"""
@@ -78,10 +78,10 @@ class Stage(object):
 
             for i in dead[name]:
 
-                dead_one = self.__layers[name].pop(i)
+                corpse = self.__layers[name].pop(i)
 
-                # Remember which Entities are dead for the sake of rendering
-                self.__dead.add(dead_one)
+                # Remember children, corpses aren't to be played with!
+                self.__dirty.add(corpse)
 
     def add_spawn(self, entity, layer=None):
         """S.add_spawn(entity[, layer])
@@ -118,7 +118,7 @@ class Stage(object):
 
         # Separate the entities clearly needing a redraw and the ones that
         # might need it
-        dirty, maybe = self.__dead, set()
+        dirty, maybe = self.__dirty, set()
 
         for entity in self:
 
