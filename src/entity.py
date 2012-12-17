@@ -63,6 +63,8 @@ class Entity(object):
 
         self.__was_drawn = False
 
+        x, y = pos
+
         # Initialise the next and current state
         for st in (self.__next, self.__curr, self.__prev):
 

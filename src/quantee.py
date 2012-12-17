@@ -65,7 +65,7 @@ class MoveOverPath(Behaviour):
 
         # Calculate the next position
         s = self.__speed
-        x, y = curr.x, curr.y
+        x, y = curr.b_box.x, curr.b_box.y
         p, q = self.__points[self.__heading_to]
 
         v_x = s * math.copysign(1, p - x)
@@ -73,8 +73,6 @@ class MoveOverPath(Behaviour):
 
         x += dt * v_x
         y += dt * v_y
-
-        next.x, next. y = x, y
 
         next.b_box.move_to(x, y)
         next.r_box.move_to(x, y)
