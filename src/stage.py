@@ -118,13 +118,13 @@ class Stage(object):
 
         # Separate the entities clearly needing a redraw and the ones that
         # might need it
-        redraw, maybe = self.__dead, set()
+        dirty, maybe = self.__dead, set()
 
         for entity in self:
 
             if entity.needs_redraw(viewport):
 
-                redraw.add(entity)
+                dirty.add(entity)
 
             else:
 
@@ -139,22 +139,22 @@ class Stage(object):
 
             for entity in maybe:
 
-                if entity.needs_redraw(viewport, redraw):
+                if entity.needs_redraw(viewport, dirty):
 
-                    redraw.add(entity)
+                    dirty.add(entity)
 
                     any_new = True
 
-            maybe.difference_update(redraw)
+            maybe.difference_update(dirty)
 
         # Redraw only those who need it
         for entity in self:
 
-            if entity in redraw:
+            if entity in dirty:
 
                 entity.draw(engine, viewport)
 
-        print "Redrawn %d entities" % len(redraw)
+        print "Redrawn %d entities" % len(dirty)
 
         # Same as self.__dead.clear()
-        redraw.clear()
+        dirty.clear()
