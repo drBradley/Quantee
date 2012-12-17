@@ -13,8 +13,8 @@ SCALE = 1
 
 
 class SDL(Engine):
-    """SDL(title, (width, height), asset_manager, event_manager[, fullscreen[, max_fps[,
-    use_busy_loop]]]) -> the Engine
+    """SDL(title, (width, height), asset_manager, event_manager[, fullscreen[,
+    max_fps[, use_busy_loop]]]) -> the Engine
 
     Engine based on the PyGame binding to the SDL library.
 

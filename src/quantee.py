@@ -197,7 +197,8 @@ class QuanteeTheGame(Game):
         engine = SDL("Quantee",
                      (640, 480),
                      QAssets(asset_path),
-                     DumbManager())
+                     DumbManager(),
+                     max_fps=32)
 
         init_level = DumbLevel()
 
