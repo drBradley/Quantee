@@ -32,10 +32,14 @@ class Level(object):
             self.__stage.spawn()
 
     # Rendering
-    def render(self, engine):
-        """L.render(engine)
+    def render(self, engine, strategy):
+        """L.render(engine, strategy)
 
         Draw the visible part of the level on screen.
         """
 
-        self.__stage.render(engine, self.__cam.viewport(self.__stage))
+        stage = self.__stage
+
+        viewport = self.__cam.viewport(stage)
+
+        strategy.render(stage, engine, viewport)
