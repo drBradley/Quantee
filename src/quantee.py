@@ -7,6 +7,7 @@ import pygame
 
 from game import Game
 from level import Level
+from drawing_strategy import Everyone
 from stage import Stage
 from ender import Ender
 from entity import Entity
@@ -214,9 +215,14 @@ class QuanteeTheGame(Game):
                      DumbManager(),
                      max_fps=32)
 
+        strategy = Everyone()
+
         init_level = DumbLevel()
 
-        super(QuanteeTheGame, self).__init__(engine, init_level)
+        super(QuanteeTheGame, self).__init__(
+            engine,
+            strategy,
+            init_level)
 
 
 if __name__ == '__main__':
