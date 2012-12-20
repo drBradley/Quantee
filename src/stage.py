@@ -114,56 +114,6 @@ class Stage(object):
 
             self.__spawns[name] = []
 
-    # Rendering
-    def render(self, engine, viewport):
-        """S.render(engine, viewport)
-
-        Render the part of the stage described by viewport using the engine.
-        """
-
-        # Separate the entities clearly needing a redraw and the ones that
-        # might need it
-        dirty, maybe = self.__dirty, set()
-
-        for entity in self:
-
-            if entity.needs_redraw(viewport):
-
-                dirty.add(entity)
-
-            else:
-
-                maybe.add(entity)
-
-        # Find all those who need redraw amongst those who might
-        any_new = True
-
-        while any_new:
-
-            any_new = False
-
-            for entity in maybe:
-
-                if entity.needs_redraw(viewport, dirty):
-
-                    dirty.add(entity)
-
-                    any_new = True
-
-            maybe.difference_update(dirty)
-
-        # Redraw only those who need it
-        for entity in self:
-
-            if entity in dirty:
-
-                entity.draw(engine, viewport)
-
-        print "Redrawn %d entities" % len(dirty)
-
-        # Same as self.__dirty.clear()
-        dirty.clear()
-
     def add_death_observer(self, observer):
         """S.add_death_observer(observer)
 
