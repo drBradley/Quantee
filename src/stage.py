@@ -32,6 +32,7 @@ class Stage(object):
 
         # To properly render everything we need to keep track of what dies
         self.__dirty = set()
+        self.__death_observers = []
 
     def __iter__(self):
         """S.__iter__() <=> iter(S)"""
@@ -80,8 +81,12 @@ class Stage(object):
 
                 corpse = self.__layers[name].pop(i)
 
-                # Remember children, corpses aren't to be played with!
                 self.__dirty.add(corpse)
+
+                # Notify everyone who might be interested
+                for death_observer in self.__death_observers:
+
+                    death_observer.tell_is_dead(corpse)
 
     def add_spawn(self, entity, layer=None):
         """S.add_spawn(entity[, layer])
@@ -156,5 +161,12 @@ class Stage(object):
 
         print "Redrawn %d entities" % len(dirty)
 
-        # Same as self.__dead.clear()
+        # Same as self.__dirty.clear()
         dirty.clear()
+
+    def add_death_observer(self, observer):
+        """S.add_death_observer(observer)
+
+        Adds a new observer of dying entities."""
+
+        self.__death_observers.append(observer)
