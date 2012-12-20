@@ -6,10 +6,11 @@ __all__ = ['Game']
 class Game(object):
     """Base class for games."""
 
-    def __init__(self, engine, init_level, timestep=1000 / 60,
-                 max_steps_per_render=100):
+    def __init__(self, engine, drawing_strategy, init_level, timestep=1000 /
+                 60, max_steps_per_render=100):
 
         self.__engine = engine
+        self.__drawing_strategy = drawing_strategy
 
         self.__timestep = timestep
         self.__max_steps_per_render = max_steps_per_render
@@ -31,7 +32,9 @@ class Game(object):
         while len(self.__levels) > 0:
 
             # Render the level and get the render time
-            self.__levels[-1].render(self.__engine)
+            self.__levels[-1].render(
+                self.__engine,
+                self.__drawing_strategy)
 
             dt = self.__engine.dt()
 
