@@ -7,7 +7,7 @@ import pygame
 
 from game import Game
 from level import Level
-from drawing_strategy import Everyone
+from drawing_strategy import DirtyWholes
 from stage import Stage
 from ender import Ender
 from entity import Entity
@@ -215,7 +215,7 @@ class QuanteeTheGame(Game):
                      DumbManager(),
                      max_fps=32)
 
-        strategy = Everyone()
+        strategy = DirtyWholes()
 
         init_level = DumbLevel()
 
