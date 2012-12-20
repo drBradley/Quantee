@@ -4,7 +4,7 @@
 from boxes import collide
 
 
-__all__ = ['DrawingStrategy', 'Everyone']
+__all__ = ['DrawingStrategy', 'Everyone', 'DirtyWholes']
 
 
 class DrawingStrategy(object):
@@ -45,3 +45,59 @@ class Everyone(DrawingStrategy):
             if collide(entity.present().r_box(), viewport):
 
                 entity.draw(engine, viewport)
+
+
+class DirtyWholes(DrawingStrategy):
+    """Drawing strategy that doesn't redraw Entities which don't have to be
+    redrawn."""
+
+    def __init__(self):
+
+        self.__dirty = set()
+
+    def tell_is_dead(self, entity):
+
+        self.__dirty.add(entity)
+
+    def render(self, stage, engine, viewport):
+
+        dirty, maybe = self.__dirty, set()
+
+        for entity in stage:
+
+            if entity.needs_redraw(viewport):
+
+                dirty.add(entity)
+
+            else:
+
+                maybe.add(entity)
+
+        # Find all those who need redraw amongst those who might
+        any_new = True
+
+        while any_new:
+
+            any_new = False
+
+            for entity in maybe:
+
+                if entity.needs_redraw(viewport, dirty):
+
+                    dirty.add(entity)
+
+                    any_new = True
+
+            maybe.difference_update(dirty)
+
+        # Redraw only those who need it
+        for entity in stage:
+
+            if entity in dirty:
+
+                entity.draw(engine, viewport)
+
+        print "Redrawn %d entities" % len(dirty)
+
+        # Same as self.__dirty.clear()
+        dirty.clear()
