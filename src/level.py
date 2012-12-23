@@ -7,11 +7,10 @@ __all__ = ['Level']
 class Level(object):
     """Level class"""
 
-    def __init__(self, cam, stage, ender):
+    def __init__(self, director, stage):
 
-        self.__cam = cam
+        self.__director = director
         self.__stage = stage
-        self.__ender = ender
 
     # Game logic
     def step(self, dt, event, levels):
@@ -20,16 +19,20 @@ class Level(object):
         Performs a logical step.
         """
 
-        if not self.__ender.done(dt, event, self.__stage, levels):
+        for entity in self.__stage:
 
-            for entity in self.__stage:
-                entity.decide(dt, event, self.__stage)
+            entity.decide(dt, event,
+                          self.__stage,
+                          self.__director.hints(entity))
 
-            for entity in self.__stage:
-                entity.act()
+        for entity in self.__stage:
 
-            self.__stage.harvest_dead()
-            self.__stage.spawn()
+            entity.act()
+
+        self.__stage.harvest_dead()
+        self.__stage.spawn()
+
+        self.__director.orchestrate(dt, event, self.__stage, levels)
 
     # Rendering
     def render(self, engine, strategy):
@@ -40,6 +43,6 @@ class Level(object):
 
         stage = self.__stage
 
-        viewport = self.__cam.viewport(stage)
+        viewport = self.__director.viewport(stage)
 
         strategy.render(stage, engine, viewport)
