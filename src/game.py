@@ -17,6 +17,10 @@ class Game(object):
 
         self.__levels = [init_level]
 
+    def __levels_left(self):
+
+        return len(self.__levels)
+
     def run(self):
         """G.run()
 
@@ -29,7 +33,7 @@ class Game(object):
         time_left = 0
 
         # Until the game stops, iterate over the events
-        while len(self.__levels) > 0:
+        while self.__levels_left():
 
             # Render the level and get the render time
             self.__levels[-1].render(
@@ -43,16 +47,22 @@ class Game(object):
             time_left += dt
             steps = 0
 
-            while time_left >= dt and steps < max_steps_per_render:
+            while (time_left >= dt and
+                   steps < max_steps_per_render):
 
-                event = self.__engine.input()
+                # When no levels are left, just exhaust the time left without
+                # advancing anything
+                if self.__levels_left():
 
-                self.__levels[-1].step(
-                    timestep,
-                    event,
-                    self.__levels)
+                    event = self.__engine.input()
 
-                steps += 1
+                    self.__levels[-1].step(
+                        timestep,
+                        event,
+                        self.__levels)
+
+                    steps += 1
+
                 time_left -= timestep
 
             print "%d physics steps performed" % steps
