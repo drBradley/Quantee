@@ -9,12 +9,11 @@ from game import Game
 from level import Level
 from drawing_strategy import DirtyWholes
 from stage import Stage
-from ender import Ender
+from director import Director
 from entity import Entity
 from behaviour import Behaviour
 from boxes import Box
 
-from cam import StaticCam
 from assets import QAssets
 from sdl import SDL, EventManager
 
@@ -111,13 +110,25 @@ class SquareMover(Entity):
             MoveOverPath(.1, points, die_after))
 
 
-class DumbEnder(Ender):
-    """DumbEnder() -> a dumb Ender
+class DumbDirector(Director):
+    """DumbDirector() -> a dumb Director
 
     Ends the whole game when the window is closed or ESC is pressed.
+
+    Keeps the camera still.
+
+    Gives no hints to Entities.
     """
 
-    def done(self, dt, event, stage, levels):
+    def __init__(self, box):
+
+        self.__box = box
+
+    def hints(self, entity):
+
+        return None
+
+    def orchestrate(self, dt, event, stage, levels):
 
         if (event is not None and
                 (event.type == pygame.QUIT or
@@ -128,9 +139,9 @@ class DumbEnder(Ender):
             for i in range(len(levels)):
                 levels.pop()
 
-            return True
+    def viewport(self, stage):
 
-        return False
+        return self.__box
 
 
 class DumbLevel(Level):
@@ -143,7 +154,6 @@ class DumbLevel(Level):
     def __init__(self):
 
         # Get a cam and a stage
-        cam = StaticCam(Box(0, 0, 640, 480))
         stage = Stage((400, 400), ['bg', 'movers'], 'movers')
 
         # Spawn the entities
@@ -166,7 +176,9 @@ class DumbLevel(Level):
         stage.spawn()
 
         # Call the superclasses initialiser
-        super(DumbLevel, self).__init__(cam, stage, DumbEnder())
+        super(DumbLevel, self).__init__(
+            DumbDirector(Box(0, 0, 640, 480)),
+            stage)
 
 
 class DumbManager(EventManager):
