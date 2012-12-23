@@ -7,6 +7,6 @@ class Behaviour(object):
 
         raise NotImplementedError()
 
-    def decide(self, dt, event, stage, prev, curr, next):
+    def decide(self, dt, event, stage, hint, prev, curr, next):
 
         raise NotImplementedError()

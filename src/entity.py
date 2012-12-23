@@ -96,15 +96,15 @@ class Entity(object):
         return self.__prev_wrap
 
     # Behaviour
-    def decide(self, dt, event, stage):
-        """E.decide(dt, event, stage)
+    def decide(self, dt, event, stage, hint):
+        """E.decide(dt, event, stage, hint)
 
         Decide what to do in the current step.
         """
 
         self.__behaviour.decide(
             dt, event,
-            stage,
+            stage, hint,
             self.__prev, self.__curr, self.__next)
 
     def act(self):
