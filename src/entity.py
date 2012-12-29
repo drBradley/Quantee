@@ -133,8 +133,7 @@ class Entity(object):
     def draw(self, engine, viewport):
         """E.draw(engine, viewport)
 
-        Given an Engine and a Box describing the viewport, draws the parts of
-        itself that need refreshing.
+        Given an Engine and a Box describing the viewport, draws itself.
         """
 
         r_box = self.present().r_box()
