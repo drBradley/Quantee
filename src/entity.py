@@ -126,48 +126,9 @@ class Entity(object):
             self.__curr_wrap)
 
     # Rendering
-    def needs_redraw(self, viewport, others=set()):
-        """E.needs_redraw(viewport[, others])
+    def was_drawn(self):
 
-        See if the entity needs to be redrawn. The optional argument others is
-        a set of other entities which do need to be redrawn -- if something
-        colliding with the current one does, so does it.
-        """
-
-        # Something that isn't on screen never needs to be redrawn
-        if collide(self.__next.r_box, viewport):
-
-            # Force the drawing of new Entities first time they apppear on
-            # screen
-            if not self.__was_drawn:
-
-                self.__was_drawn = True
-                return True
-
-            # See if a redraw is necessary due to changes in the entity itself
-            moved = self.present().r_box() != self.past().r_box()
-
-            sprite_changed = \
-                self.present().state_name() != self.past().state_name()
-
-            if moved or sprite_changed:
-                return True
-
-            # See if a redraw is necessary due to changes around the entity
-            for other in others:
-
-                collided = collide(
-                    self.past().r_box(),
-                    other.past().r_box())
-
-                collide_now = collide(
-                    self.present().r_box(),
-                    other.present().r_box())
-
-                if collided or collide_now:
-                    return True
-
-        return False
+        return self.__was_drawn
 
     def draw(self, engine, viewport):
         """E.draw(engine, viewport)
@@ -184,3 +145,5 @@ class Entity(object):
             pos,
             self.present().state_name(),
             viewport)
+
+        self.__was_drawn = True
