@@ -59,13 +59,17 @@ class DirtyWholes(DrawingStrategy):
 
         self.__dirty.add(entity)
 
+    def __is_dirty(self, entity, viewport, others=set()):
+
+        return entity.needs_redraw(viewport, others)
+
     def render(self, stage, engine, viewport):
 
         dirty, maybe = self.__dirty, set()
 
         for entity in stage:
 
-            if entity.needs_redraw(viewport):
+            if self.__is_dirty(entity, viewport):
 
                 dirty.add(entity)
 
@@ -82,7 +86,7 @@ class DirtyWholes(DrawingStrategy):
 
             for entity in maybe:
 
-                if entity.needs_redraw(viewport, dirty):
+                if self.__is_dirty(entity, viewport, dirty):
 
                     dirty.add(entity)
 
