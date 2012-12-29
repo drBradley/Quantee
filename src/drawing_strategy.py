@@ -61,7 +61,39 @@ class DirtyWholes(DrawingStrategy):
 
     def __is_dirty(self, entity, viewport, others=set()):
 
-        return entity.needs_redraw(viewport, others)
+        # Something that isn't on screen never needs to be redrawn
+        if collide(entity.present().r_box(), viewport):
+
+            # Force the drawing of new Entities first time they apppear on
+            # screen
+            if not entity.was_drawn():
+
+                return True
+
+            # See if a redraw is necessary due to changes in the entity itentity
+            moved = entity.present().r_box() != entity.past().r_box()
+
+            sprite_changed = \
+                entity.present().state_name() != entity.past().state_name()
+
+            if moved or sprite_changed:
+                return True
+
+            # See if a redraw is necessary due to changes around the entity
+            for other in others:
+
+                collided = collide(
+                    entity.past().r_box(),
+                    other.past().r_box())
+
+                collide_now = collide(
+                    entity.present().r_box(),
+                    other.present().r_box())
+
+                if collided or collide_now:
+                    return True
+
+        return False
 
     def render(self, stage, engine, viewport):
 
