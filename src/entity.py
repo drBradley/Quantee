@@ -61,8 +61,6 @@ class Entity(object):
         self.__curr_wrap = StateWrapper(self.__curr)
         self.__prev_wrap = StateWrapper(self.__prev)
 
-        self.__was_drawn = False
-
         x, y = pos
 
         # Initialise the next and current state
@@ -126,10 +124,6 @@ class Entity(object):
             self.__curr_wrap)
 
     # Rendering
-    def was_drawn(self):
-
-        return self.__was_drawn
-
     def draw(self, engine, viewport):
         """E.draw(engine, viewport)
 
