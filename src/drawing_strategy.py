@@ -54,10 +54,26 @@ class DirtyWholes(DrawingStrategy):
     def __init__(self):
 
         self.__dirty = set()
+        self.__drawn = set()
 
     def tell_is_dead(self, entity):
 
         self.__dirty.add(entity)
+        self.__mark_drawn(entity, False)
+
+    def __was_drawn(self, entity):
+
+        return entity in self.__drawn
+
+    def __mark_drawn(self, entity, dont_flip=True):
+
+        if dont_flip and entity in self.__drawn:
+
+            self.__drawn.remove(entity)
+
+        else:
+
+            self.__drawn.add(entity)
 
     def __is_dirty(self, entity, viewport, others=set()):
 
@@ -66,7 +82,9 @@ class DirtyWholes(DrawingStrategy):
 
             # Force the drawing of new Entities first time they apppear on
             # screen
-            if not entity.was_drawn():
+            if not self.__was_drawn(entity):
+
+                self.__mark_drawn(entity)
 
                 return True
 
