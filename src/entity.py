@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-from boxes import Box, collide
+from boxes import Box
 
 __all__ = ['Entity']
 
