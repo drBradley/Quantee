@@ -21,23 +21,7 @@ class Engine(object):
 
         return None
 
-    def update(self):
-        """E.update()
-
-        Perform operations that need to be called every loop.
-
-        The default implementation makes a tick in the default clock system.
-        """
-
-        self.__prev = time.time()
-
     # Rendering
-    @property
-    def screen_size(self):
-        """E.screen_size -> (width, height)"""
-
-        raise NotImplementedError()
-
     def draw(self, pos, sprite_name, rect=None):
         """E.draw((x, y), sprite_name[, (x_sub, y_sub, w_sub, h_sub)])
 
@@ -51,5 +35,23 @@ class Engine(object):
         transform them to the underlying coordinate system used by the
         rendering library.
         """
+
+        raise NotImplementedError()
+
+    # Extra operations
+    def update(self):
+        """E.update()
+
+        Perform operations that need to be called every loop.
+
+        The default implementation makes a tick in the default clock system.
+        """
+
+        self.__prev = time.time()
+
+    # Data descriptors
+    @property
+    def screen_size(self):
+        """E.screen_size -> (width, height)"""
 
         raise NotImplementedError()
