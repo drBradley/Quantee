@@ -6,6 +6,26 @@ import time
 __all__ = ['Engine']
 
 
+class Options(object):
+    """Abstract base class for option control objects."""
+
+    def set_fullscreen(self, yes):
+        """O.set_fullscreen(yes)
+
+        Sets fullscreen state to yes.
+        """
+
+        raise NotImplementedError()
+
+    def set_resolution(self, width, height):
+        """O.set_resolution(width, height)
+
+        Sets the given resolution.
+        """
+
+        raise NotImplementedError()
+
+
 class Engine(object):
     """Abstract base class for engines."""
 
@@ -50,7 +70,6 @@ class Engine(object):
         self.__prev = time.time()
 
     # Data descriptors
-    @property
     def screen_size(self):
         """E.screen_size -> (width, height)"""
 
