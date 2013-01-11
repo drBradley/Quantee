@@ -12,14 +12,6 @@ class DrawingStrategy(object):
     pass.
     """
 
-    def tell_is_dead(self, entity):
-        """DS.tell_is_dead(entity)
-
-        Notify the DrawingStrategy that an Entity has died.
-        """
-
-        raise NotImplementedError()
-
     def force_all(self):
         """DS.force_all()
 
@@ -42,10 +34,6 @@ class Everyone(DrawingStrategy):
     """A drawing strategy that draws everything that collides with the
     viewport.
     """
-
-    def tell_is_dead(self, entity):
-
-        pass
 
     def force_all(self):
 
