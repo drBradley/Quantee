@@ -36,6 +36,10 @@ class Game(object):
         while self.__levels_left():
 
             # Render the level and get the render time
+            if self.__engine.options().screen_changed():
+
+                self.__drawing_strategy.force_all()
+
             self.__levels[-1].render(
                 self.__engine,
                 self.__drawing_strategy)
