@@ -25,6 +25,21 @@ class Options(object):
 
         raise NotImplementedError()
 
+    def confirm(self):
+        """O.accept()
+
+        Does all the actual option setting -- befora call to this the options
+        set are only remembered internally.
+        """
+
+        raise NotImplementedError()
+
+    def cancel(self):
+        """O.cancel()
+
+        Forget all the options set without actually doing anything.
+        """
+
 
 class Engine(object):
     """Abstract base class for engines."""
