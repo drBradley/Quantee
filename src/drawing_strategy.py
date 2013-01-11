@@ -20,6 +20,15 @@ class DrawingStrategy(object):
 
         raise NotImplementedError()
 
+    def force_all(self):
+        """DS.force_all()
+
+        Forces all visible entities to be drawn once, neglecting the normal
+        behaviour of the strategy.
+        """
+
+        raise NotImplementedError()
+
     def render(self, stage, engine, viewport):
         """DS.render(stage, engine, viewport)
 
@@ -35,6 +44,10 @@ class Everyone(DrawingStrategy):
     """
 
     def tell_is_dead(self, entity):
+
+        pass
+
+    def force_all(self):
 
         pass
 
@@ -56,10 +69,16 @@ class DirtyWholes(DrawingStrategy):
         self.__dirty = set()
         self.__drawn = set()
 
+        self.__force_all = False
+
     def tell_is_dead(self, entity):
 
         self.__dirty.add(entity)
         self.__mark_drawn(entity, False)
+
+    def force_all(self):
+
+        self.__force_all = True
 
     def __was_drawn(self, entity):
 
@@ -79,6 +98,11 @@ class DirtyWholes(DrawingStrategy):
 
         # Something that isn't on screen never needs to be redrawn
         if collide(entity.present().r_box(), viewport):
+
+            # Is the stretegy being suppresed?
+            if self.__force_all:
+
+                return True
 
             # Force the drawing of new Entities first time they apppear on
             # screen
@@ -153,5 +177,6 @@ class DirtyWholes(DrawingStrategy):
 
         print "Redrawn %d entities" % len(dirty)
 
-        # Same as self.__dirty.clear()
-        dirty.clear()
+        # Clear up
+        self.__dirty.clear()
+        self.__force_all = False
