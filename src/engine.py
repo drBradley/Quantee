@@ -9,6 +9,15 @@ __all__ = ['Engine', 'Options']
 class Options(object):
     """Abstract base class for option control objects."""
 
+    def screen_changes(self):
+        """O.screen_size() -> bool
+
+        Were the screen options (fullscreen/windowed mode and resolution)
+        altered since the last call?
+        """
+
+        raise NotImplementedError()
+
     def fullscreen(self):
         """O.fullscreen() -> bool
 
