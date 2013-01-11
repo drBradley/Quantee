@@ -52,6 +52,16 @@ class Options(Options):
         self.__fullscreen = None
         self.__resolution = None
 
+        self.__screen_changed = False
+
+    def screen_changed(self):
+
+        did_it = self.__screen_changed
+
+        self.__screen_changed = False
+
+        return did_it
+
     def fullscreen(self):
 
         self.__internals.fullscreen()
@@ -92,6 +102,7 @@ class Options(Options):
                 pygame.FULLSCREEN if fullscreen else 0)
 
             self.__internals.set_fullscreen(fullscreen)
+            self.__screen_changed = True
 
     def cancel(self):
 
