@@ -136,6 +136,8 @@ class DirtyWholes(DrawingStrategy):
 
         dirty, maybe = self.__dirty, set()
 
+        print 'Initially, we have %d dirty objects' % len(dirty)
+
         for entity in stage:
 
             if self.__is_dirty(entity, viewport):
