@@ -12,6 +12,35 @@ __all__ = ['SDL', 'EventManager']
 SCALE = 1
 
 
+class Internal(object):
+    """Internal(fullscreen) -> a new Internal object
+
+    Used to communicate between the SDL Engine class and it's Options class
+    without giving either public methods to do so.
+    """
+
+    def __init__(self, fullscreen):
+
+        self.__fullscreen = fullscreen
+
+    def fullscreen(self):
+        """I.fullscreen() -> bool
+
+        Tells whether the engine is in fullscreen mode or not.
+        """
+
+        return self.__fullscreen
+
+    def set_fullscreen(self, yes):
+        """I.set_fullscreen(yes)
+
+        Sets the value of the fullscreen setting, to be shared between Options
+        and SDL.
+        """
+
+        self.__fullscreen = yes
+
+
 class Options(Options):
     """Options(engine) -> a new Options object for the SDL engine"""
 
@@ -57,6 +86,7 @@ class Options(Options):
 
         self.__fullscreen = None
         self.__resolution = None
+
 
 class SDL(Engine):
     """SDL(title, (width, height), asset_manager, event_manager[, fullscreen[,
