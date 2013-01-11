@@ -52,9 +52,17 @@ class Options(Options):
         self.__fullscreen = None
         self.__resolution = None
 
+    def fullscreen(self):
+
+        self.__internals.fullscreen()
+
     def set_fullscreen(self, yes):
 
         self.__fullscreen = yes
+
+    def resolution(self):
+
+        return self.__engine.screen_size()
 
     def set_resolution(self, width, height):
 
