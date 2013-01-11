@@ -44,9 +44,10 @@ class Internal(object):
 class Options(Options):
     """Options(engine) -> a new Options object for the SDL engine"""
 
-    def __init__(self, engine):
+    def __init__(self, engine, internals):
 
         self.__engine = engine
+        self.__internals = internals
 
         self.__fullscreen = None
         self.__resolution = None
@@ -82,6 +83,8 @@ class Options(Options):
                 res,
                 pygame.FULLSCREEN if fullscreen else 0)
 
+            self.__internals.set_fullscreen(fullscreen)
+
     def cancel(self):
 
         self.__fullscreen = None
@@ -113,6 +116,10 @@ class SDL(Engine):
         super(SDL, self).__init__()
 
         pygame.init()
+
+        # Prepare the options object
+        self.__internals = Internal(fullscreen)
+        self.__opt = Options(self, self.__internals)
 
         # Prepare the asset manager
         self.__asset_manager = asset_manager
@@ -204,13 +211,21 @@ class SDL(Engine):
 
         return n_box
 
-    # Rendering
-    @property
+    # State
     def screen_size(self):
         """SDL.screen_size -> (width, height)"""
 
         return self.__screen.get_size()
 
+    def fullscreen(self):
+        """SDL.fullscreen() -> bool
+
+        Tell whether the display is in fullscreen mode or not.
+        """
+
+        self.__fu
+
+    # Rendering
     def draw(self, pos, sprite_name, viewport):
         """SDL.draw((x, y), sprite_name, viewport)
 
