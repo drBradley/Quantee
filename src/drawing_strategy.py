@@ -54,6 +54,8 @@ class DirtyWholes(DrawingStrategy):
 
     def __init__(self):
 
+        self.__active_stage_id = id(None)
+
         self.__dirty = set()
         self.__drawn = set()
 
@@ -126,6 +128,11 @@ class DirtyWholes(DrawingStrategy):
         return False
 
     def render(self, stage, engine, viewport):
+
+        if id(stage) != self.__active_stage_id:
+
+            stage.add_death_observer(self)
+            self.__active_stage_id = id(stage)
 
         dirty, maybe = self.__dirty, set()
 
