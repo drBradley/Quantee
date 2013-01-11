@@ -231,7 +231,7 @@ class SDL(Engine):
         Tell whether the display is in fullscreen mode or not.
         """
 
-        self.__fu
+        self.__internals.fullscreen()
 
     # Rendering and options
     def options(self):
