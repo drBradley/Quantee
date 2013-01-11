@@ -3,7 +3,7 @@
 
 import time
 
-__all__ = ['Engine']
+__all__ = ['Engine', 'Options']
 
 
 class Options(object):

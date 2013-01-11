@@ -4,13 +4,59 @@
 import pygame
 
 from boxes import Box
-from engine import Engine
+from engine import Engine, Options
 
 __all__ = ['SDL', 'EventManager']
 
 
 SCALE = 1
 
+
+class Options(Options):
+    """Options(engine) -> a new Options object for the SDL engine"""
+
+    def __init__(self, engine):
+
+        self.__engine = engine
+
+        self.__fullscreen = None
+        self.__resolution = None
+
+    def set_fullscreen(self, yes):
+
+        self.__fullscreen = yes
+
+    def set_resolution(self, width, height):
+
+        self.__resolution = (width, height)
+
+    def confirm(self):
+
+        fullscreen = self.__engine.fullscreen()
+        res = self.__engine.screen_size()
+
+        call_set_mode = False
+
+        if self.__resolution not in (None, res):
+
+            res = self.__resolution
+            call_set_mode = True
+
+        if self.__fullscreen not in (None, fullscreen):
+
+            fullscreen = self.__fullscreen
+            call_set_mode = True
+
+        if call_set_mode:
+
+            pygame.display.set_mode(
+                res,
+                pygame.FULLSCREEN if fullscreen else 0)
+
+    def cancel(self):
+
+        self.__fullscreen = None
+        self.__resolution = None
 
 class SDL(Engine):
     """SDL(title, (width, height), asset_manager, event_manager[, fullscreen[,
