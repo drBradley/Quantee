@@ -9,11 +9,24 @@ __all__ = ['Engine', 'Options']
 class Options(object):
     """Abstract base class for option control objects."""
 
+    def fullscreen(self):
+        """O.fullscreen() -> bool
+
+        Tell whether the game is in fullscreen.
+        """
+
+        raise NotImplementedError()
+
     def set_fullscreen(self, yes):
         """O.set_fullscreen(yes)
 
         Sets fullscreen state to yes.
         """
+
+        raise NotImplementedError()
+
+    def resolution(self):
+        """O.resolution() -> (width, height)"""
 
         raise NotImplementedError()
 
