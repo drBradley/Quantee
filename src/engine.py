@@ -84,6 +84,14 @@ class Engine(object):
 
         self.__prev = time.time()
 
+    def options(self):
+        """E.options() -> an Options object
+
+        Return an object used to set options from a Director.
+        """
+
+        raise NotImplementedError()
+
     # Data descriptors
     def screen_size(self):
         """E.screen_size -> (width, height)"""

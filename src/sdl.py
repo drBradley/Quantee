@@ -225,7 +225,15 @@ class SDL(Engine):
 
         self.__fu
 
-    # Rendering
+    # Rendering and options
+    def options(self):
+        """SDL.options() -> an Options object
+
+        Return an object used to set options from a Director.
+        """
+
+        return self.__opt
+
     def draw(self, pos, sprite_name, viewport):
         """SDL.draw((x, y), sprite_name, viewport)
 
