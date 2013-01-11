@@ -120,9 +120,13 @@ class DumbDirector(Director):
     Gives no hints to Entities.
     """
 
-    def __init__(self, box):
+    def __init__(self, box, toggle_fullscreen_each_s=15):
 
         self.__box = box
+
+        self.__toggle_fullscreen_each_ms = toggle_fullscreen_each_s * 1000
+        self.__time = 0
+        self.__last_toggle = 0
 
     def hints(self, entity):
 
@@ -130,6 +134,8 @@ class DumbDirector(Director):
 
     def orchestrate(self, dt, event, stage, levels, options):
 
+        # Close the game when the window gets closed or the player presses
+        # Escape
         if (event is not None and
                 (event.type == pygame.QUIT or
 
@@ -138,6 +144,18 @@ class DumbDirector(Director):
 
             for i in range(len(levels)):
                 levels.pop()
+
+        # Handle toggling between fullscreen and windowed mode each n seconds
+        self.__time += dt
+
+        toggle_no = self.__time / self.__toggle_fullscreen_each_ms
+
+        if toggle_no > self.__last_toggle:
+
+            options.set_fullscreen(bool(toggle_no % 2))
+            options.confirm()
+
+            self.__last_toggle += 1
 
     def viewport(self, stage):
 
