@@ -59,7 +59,8 @@ class Game(object):
                     self.__levels[-1].step(
                         timestep,
                         event,
-                        self.__levels)
+                        self.__levels,
+                        self.__engine.options())
 
                     steps += 1
 

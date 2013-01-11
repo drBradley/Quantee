@@ -17,7 +17,7 @@ class Director(object):
 
         raise NotImplementedError()
 
-    def orchestrate(self, dt, event, stage, levels):
+    def orchestrate(self, dt, event, stage, levels, options):
         """D.orchestrate(dt, event, stage, levels)
 
         Manage the scene and game flow.

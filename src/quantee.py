@@ -128,7 +128,7 @@ class DumbDirector(Director):
 
         return None
 
-    def orchestrate(self, dt, event, stage, levels):
+    def orchestrate(self, dt, event, stage, levels, options):
 
         if (event is not None and
                 (event.type == pygame.QUIT or

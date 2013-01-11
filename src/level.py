@@ -13,8 +13,8 @@ class Level(object):
         self.__stage = stage
 
     # Game logic
-    def step(self, dt, event, levels):
-        """L.step(dt, event, levels)
+    def step(self, dt, event, levels, options):
+        """L.step(dt, event, levels, options)
 
         Performs a logical step.
         """
@@ -32,7 +32,10 @@ class Level(object):
         self.__stage.harvest_dead()
         self.__stage.spawn()
 
-        self.__director.orchestrate(dt, event, self.__stage, levels)
+        self.__director.orchestrate(dt, event,
+                                    self.__stage,
+                                    levels,
+                                    options)
 
     # Rendering
     def render(self, engine, strategy):
