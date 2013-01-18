@@ -28,17 +28,24 @@ class DoNothing(Behaviour):
         pass
 
 
-class Background(Entity):
-    """Background(image_name) -> a still background image"""
+class Environment(Entity):
+    """Environment(x, y, image_name[, is_obstacle]) -> a still image"""
 
-    def __init__(self, x, y, image_name):
+    def __init__(self, x, y, image_name, is_obstacle=False):
 
-        super(Background, self).__init__(
+        super(Environment, self).__init__(
             (x, y),
             (400, 400),
             (400, 400),
             image_name,
             DoNothing())
+
+        self.__is_obstacle = is_obstacle
+
+    def is_obstacle(self):
+        """E.is_obstacle() -> bool"""
+
+        return self.__is_obstacle
 
 
 class MoveOverPath(Behaviour):
@@ -175,9 +182,9 @@ class DumbLevel(Level):
         stage = Stage((400, 400), ['bg', 'movers'], 'movers')
 
         # Spawn the entities
-        stage.add_spawn(Background(0, 0, 'bg'), 'bg')
+        stage.add_spawn(Environment(0, 0, 'bg'), 'bg')
 
-        stage.add_spawn(Background(410, 410, 'bg'), 'bg')
+        stage.add_spawn(Environment(410, 410, 'bg'), 'bg')
 
         stage.add_spawn(SquareMover('red_box', [
             (100, 100),
