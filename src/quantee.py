@@ -74,6 +74,19 @@ class GetCollected(Behaviour):
                 next.dead = True
 
 
+class Star(Entity):
+    """Star(x, y) -> a collectible star"""
+
+    def __init__(self, x, y):
+
+        super(Star, self).__init__(
+            (x, y),
+            (63, 63),
+            (60, 60),
+            "star",
+            GetCollected(Psi))
+
+
 class MoveOverPath(Behaviour):
     """MoveOverPath(speed, points) -> a Behaviour for objects following a path
     and moving with a constant speed
