@@ -193,7 +193,7 @@ class DumbLevel(Level):
     def __init__(self):
 
         # Get a cam and a stage
-        stage = Stage((400, 400), ['bg', 'movers'], 'movers')
+        stage = Stage((800, 600), ['bg', 'movers'], 'movers')
 
         # Spawn the entities
         stage.add_spawn(Environment(0, 0, 'bg'), 'bg')
@@ -206,7 +206,7 @@ class DumbLevel(Level):
 
         # Call the superclasses initialiser
         super(DumbLevel, self).__init__(
-            DumbDirector(Box(0, 0, 640, 480)),
+            DumbDirector(Box(0, 0, 800, 600)),
             stage)
 
 
@@ -251,7 +251,7 @@ class QuanteeTheGame(Game):
             'assets')
 
         engine = SDL("Quantee",
-                     (640, 480),
+                     (800, 600),
                      QAssets(asset_path),
                      DumbManager(),
                      max_fps=32)
