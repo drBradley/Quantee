@@ -12,7 +12,7 @@ from stage import Stage
 from director import Director
 from entity import Entity
 from behaviour import Behaviour
-from boxes import Box
+from boxes import Box, collide
 
 from assets import QAssets
 from sdl import SDL, EventManager
@@ -46,6 +46,32 @@ class Environment(Entity):
         """E.is_obstacle() -> bool"""
 
         return self.__is_obstacle
+
+
+class GetCollected(Behaviour):
+    """GetCollected(cls) -> a Behaviour which kills it's Entity one physics
+    step after colliding with any entity of type cls
+    """
+
+    def __init__(self, cls):
+
+        self.__cls = cls
+
+    def prepare(self, prev, curr, next):
+        pass
+
+    def decide(self, dt, event, stage, hint, prev, curr, next):
+
+        if curr.dead:
+
+            next.dead = True
+
+        for entity in stage:
+
+            if isinstance(entity, self.__cls) and\
+                    collide(curr.b_box, entity.present().b_box()):
+
+                next.dead = True
 
 
 class MoveOverPath(Behaviour):
@@ -103,18 +129,6 @@ class MoveOverPath(Behaviour):
 
             else:
                 next.passed = curr.passed - 1
-
-
-class SquareMover(Entity):
-
-    def __init__(self, sprite_name, points, die_after=None):
-
-        super(SquareMover, self).__init__(
-            (200, 100),
-            (30, 30),
-            (30, 30),
-            sprite_name,
-            MoveOverPath(.1, points, die_after))
 
 
 class DumbDirector(Director):
@@ -186,16 +200,7 @@ class DumbLevel(Level):
 
         stage.add_spawn(Environment(410, 410, 'bg'), 'bg')
 
-        stage.add_spawn(SquareMover('red_box', [
-            (100, 100),
-            (100, 300),
-            (300, 300),
-            (300, 100)]))
 
-        stage.add_spawn(SquareMover('green_box', [
-            (200, 10),
-            (10, 200),
-            (200, 200)]))
 
         stage.spawn()
 
