@@ -74,6 +74,19 @@ class GetCollected(Behaviour):
                 next.dead = True
 
 
+class Psi(Entity):
+    """Psi(x, y) -> Psi, the quantum boy"""
+
+    def __init__(self, x, y):
+
+        super(Psi, self).__init__(
+            (x, y),
+            (40, 50),
+            (40, 50),
+            'psi',
+            DoNothing())
+
+
 class Star(Entity):
     """Star(x, y) -> a collectible star"""
 
@@ -209,11 +222,21 @@ class DumbLevel(Level):
         stage = Stage((800, 600), ['bg', 'movers'], 'movers')
 
         # Spawn the entities
-        stage.add_spawn(Environment(0, 0, 'bg'), 'bg')
+        stage.add_spawn(Environment(5, 5, 'bg'), 'bg')
 
-        stage.add_spawn(Environment(410, 410, 'bg'), 'bg')
+        stage.add_spawn(Environment(0, 0, 'h_bar', True), 'bg')
 
+        stage.add_spawn(Environment(0, 570, 'h_bar', True), 'bg')
 
+        stage.add_spawn(Environment(0, 30, 'v_bar', True), 'bg')
+
+        stage.add_spawn(Environment(770, 30, 'v_bar', True), 'bg')
+
+        stage.add_spawn(Environment(370, 30, 'sqr', True), 'bg')
+
+        stage.add_spawn(Star(710, 30))
+
+        stage.add_spawn(Psi(35, 35))
 
         stage.spawn()
 
