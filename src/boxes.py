@@ -20,24 +20,33 @@ def bounding(b1, b2):
     return Box(x, y, w, h)
 
 
-def __corners(box):
+def __corners(box, margin):
 
-    for x in (box.x, box.x + box.w):
+    if isinstance(margin, tuple) and len(margin) == 2:
 
-        for y in (box.y, box.y + box.h):
+        mx, my = margin
+
+    else:
+
+        mx = margin
+        my = margin
+
+    for x in (box.x - mx, box.x + box.w + mx):
+
+        for y in (box.y - my, box.y + box.h + my):
 
             yield (x, y)
 
 
-def collide(a, b, check_reverse=True):
+def collide(a, b, margin=0):
 
-    for a_point in __corners(a):
+    for a_point in __corners(a, margin):
 
         if a_point in b:
 
             return True
 
-    for b_point in __corners(b):
+    for b_point in __corners(b, margin):
 
         if b_point in a:
 
