@@ -20,17 +20,30 @@ def bounding(b1, b2):
     return Box(x, y, w, h)
 
 
-def collide(b1, b2):
+def __corners(box):
 
-    if ((b2.x + b2.w <= b1.x or
-         b1.x + b1.w <= b2.x) and
+    for x in (box.x, box.x + box.w):
 
-        (b2.y >= b1.x + b1.h or
-         b2.y + b2.h <= b1.y)):
+        for y in (box.y, box.y + box.h):
 
-        return False
+            yield (x, y)
 
-    return True
+
+def collide(a, b, check_reverse=True):
+
+    for a_point in __corners(a):
+
+        if a_point in b:
+
+            return True
+
+    for b_point in __corners(b):
+
+        if b_point in a:
+
+            return True
+
+    return False
 
 
 class Box(object):
