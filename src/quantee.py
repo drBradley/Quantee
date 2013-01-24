@@ -76,9 +76,11 @@ class GetCollected(Behaviour):
 
 class JumpNRun(Behaviour):
 
-    def __init__(self, g):
+    def __init__(self, g, v_max):
 
         self.__g = g
+
+        self.__v_max = v_max
 
         self.__v = (0, 0)
 
@@ -88,12 +90,29 @@ class JumpNRun(Behaviour):
 
     def decide(self, dt, event, stage, hint, prev, curr, next):
 
+        # Get the parametes
         g = self.__g
+        v_max = self.__v_max
 
+        # Get the previous speed value and alter it
         vx, vy = self.__v
 
         vy += g * dt
 
+        # Renormalise speed when necessary
+        v_norm = math.sqrt(vx ** 2 + vy ** 2)
+
+        if v_norm > v_max:
+
+            print "Scaling velocity..."
+            print "Before: (%f, %f)" % (vx, vy)
+
+            vx *= v_max / v_norm
+            vy *= v_max / v_norm
+
+            print "After: (%f, %f)" % (vx, vy)
+
+        # Move the Entity
         dx, dy = vx * dt, vy * dt
 
         for box, pbox in [(next.b_box, curr.b_box),
@@ -102,6 +121,7 @@ class JumpNRun(Behaviour):
             box.move_to(pbox.x, pbox.y)
             box.move_by(dx, dy)
 
+        # Store current speed
         self.__v = (vx, vy)
 
 
@@ -115,7 +135,7 @@ class Psi(Entity):
             (40, 50),
             (40, 50),
             'psi',
-            JumpNRun(-1e-5))
+            JumpNRun(-1e-3, 0.1))
 
 
 class Star(Entity):
