@@ -286,9 +286,12 @@ class QuanteeTheGame(Game):
             '..',
             'assets')
 
+        color_key = (255, 0, 255)
+
         engine = SDL("Quantee",
                      (800, 600),
-                     QAssets(asset_path),
+                     color_key,
+                     QAssets(color_key, asset_path),
                      DumbManager(),
                      max_fps=32)
 

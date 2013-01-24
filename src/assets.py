@@ -12,10 +12,12 @@ __all__ = ['QAssets']
 
 class QAssets(AssetManager):
 
-    def __init__(self, asset_dir=None):
+    def __init__(self, color_key, asset_dir=None):
 
         if not isinstance(asset_dir, basestring):
             asset_dir = os.getenv('QUANTEE_ASSETS', './assets')
+
+        self.__color_key = color_key
 
         self.__asset_dir = os.path.abspath(asset_dir)
 
@@ -29,7 +31,9 @@ class QAssets(AssetManager):
                                 'sprites',
                                 name + '.png')
 
-            sprite = pygame.image.load(path).convert()
+            sprite = pygame.image.load(path)
+            sprite.set_colorkey(self.__color_key)
+            sprite = sprite.convert()
 
             self.__sprites[name] = sprite
 

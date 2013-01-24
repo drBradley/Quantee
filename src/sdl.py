@@ -111,10 +111,12 @@ class Options(Options):
 
 
 class SDL(Engine):
-    """SDL(title, (width, height), asset_manager, event_manager[, fullscreen[,
-    max_fps[, use_busy_loop]]]) -> the Engine
+    """SDL(title, (width, height), color_key, asset_manager, event_manager[,
+    fullscreen[, max_fps[, use_busy_loop]]]) -> the Engine
 
     Engine based on the PyGame binding to the SDL library.
+
+      * `color_key` is the color to be considered transparent in sprites
 
       * `event_manager` is to be an instance of `sdl.EventManager`
 
@@ -128,8 +130,9 @@ class SDL(Engine):
         Defaults to False.
     """
 
-    def __init__(self, title, screen_size, asset_manager, event_manager,
-                 fullscreen=False, max_fps=32, use_busy_loop=False):
+    def __init__(self, title, screen_size, color_key, asset_manager,
+                 event_manager, fullscreen=False, max_fps=32,
+                 use_busy_loop=False):
 
         # Prerequisite initialisation
         super(SDL, self).__init__()
@@ -149,6 +152,7 @@ class SDL(Engine):
             pygame.FULLSCREEN if fullscreen else 0)
 
         self.__screen = pygame.display.get_surface()
+        self.__screen.set_colorkey(color_key)
 
         pygame.display.set_caption(title)
 
