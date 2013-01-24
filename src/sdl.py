@@ -6,7 +6,7 @@ import pygame
 from boxes import Box
 from engine import Engine, Options
 
-__all__ = ['SDL', 'EventManager']
+__all__ = ['SDL']
 
 
 SCALE = 1
@@ -111,14 +111,12 @@ class Options(Options):
 
 
 class SDL(Engine):
-    """SDL(title, (width, height), color_key, asset_manager, event_manager[,
-    fullscreen[, max_fps[, use_busy_loop]]]) -> the Engine
+    """SDL(title, (width, height), color_key, asset_manager[, fullscreen[,
+    max_fps[, use_busy_loop[, allowed_events]]]]) -> the Engine
 
     Engine based on the PyGame binding to the SDL library.
 
       * `color_key` is the color to be considered transparent in sprites
-
-      * `event_manager` is to be an instance of `sdl.EventManager`
 
       * `fullscreen` defaults to False and `max_fps` defaults to 32
 
@@ -128,11 +126,14 @@ class SDL(Engine):
         machine but less precise.
 
         Defaults to False.
+
+      * `allowed_events` is a list of PyGame event types that shouldn't be
+        ommited. Defaults to [pygame.QUIT, pygame.KEYDOWN]
     """
 
     def __init__(self, title, screen_size, color_key, asset_manager,
-                 event_manager, fullscreen=False, max_fps=32,
-                 use_busy_loop=False):
+                 fullscreen=False, max_fps=32, use_busy_loop=False,
+                 allowed_events=[pygame.QUIT, pygame.KEYDOWN]):
 
         # Prerequisite initialisation
         super(SDL, self).__init__()
@@ -160,9 +161,7 @@ class SDL(Engine):
 
         # Prepare the event system
         pygame.event.set_allowed(None)
-        pygame.event.set_allowed(event_manager.allowed)
-
-        self.__event_manager = event_manager
+        pygame.event.set_allowed(allowed_events)
 
         # Prepare SDL-based clock system
         self.__clock = pygame.time.Clock()
@@ -186,10 +185,7 @@ class SDL(Engine):
     def input(self):
         """SDL.input() -> an Event or None"""
 
-        raw_event = pygame.event.poll()
-        event = self.__event_manager.transform(raw_event)
-
-        return event
+        return pygame.event.poll()
 
     def update(self):
         """SDL.update()
@@ -308,29 +304,6 @@ class AssetManager(object):
         """AM.clear_cache()
 
         Clear the cache, so that extraneous memory isn't used.
-        """
-
-        raise NotImplementedError()
-
-
-class EventManager(object):
-    """Abstract base class for EventManagers."""
-
-    @property
-    def allowed(self):
-        """EM.allowed
-
-        Property, returning a list of allowed event types (configured per
-        class).
-        """
-
-        raise NotImplementedError()
-
-    def transform(self, raw_event):
-        """EM.transform(raw_event) -> event
-
-        Take a PyGame event and return a one tailored to the needs of a
-        particular game.
         """
 
         raise NotImplementedError()

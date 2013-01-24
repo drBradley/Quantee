@@ -15,7 +15,7 @@ from behaviour import Behaviour
 from boxes import Box, collide
 
 from assets import QAssets
-from sdl import SDL, EventManager
+from sdl import SDL
 
 
 class DoNothing(Behaviour):
@@ -277,36 +277,6 @@ class DumbLevel(Level):
             stage)
 
 
-class DumbManager(EventManager):
-    """DumbManager() -> a dumb EventManager
-
-    It allows for the presence of QUIT, NOEVENT and KEYDOWN pygame events and
-    passes them on unmodified.
-    """
-
-    __allowed = [
-        pygame.QUIT,
-        pygame.NOEVENT,
-        pygame.KEYDOWN]
-
-    @property
-    def allowed(self):
-        """DM.allowed -> list of allowed PyGame event types
-
-        Contains pygame.QUIT and pygame.NOEVENT.
-        """
-
-        return self.__allowed
-
-    def transform(self, raw_event):
-        """DM.transform(raw_event) -> raw_event
-
-        Performs no transformations.
-        """
-
-        return raw_event
-
-
 class QuanteeTheGame(Game):
     """QuanteeTheGame() -> our game"""
 
@@ -319,19 +289,18 @@ class QuanteeTheGame(Game):
 
         color_key = (255, 0, 255)
 
-        engine = SDL("Quantee",
-                     (800, 600),
-                     color_key,
-                     QAssets(color_key, asset_path),
-                     DumbManager(),
-                     max_fps=32)
+        sdl = SDL("Quantee",
+                  (800, 600),
+                  color_key,
+                  QAssets(color_key, asset_path),
+                  max_fps=32)
 
         strategy = DirtyWholes()
 
         init_level = DumbLevel()
 
         super(QuanteeTheGame, self).__init__(
-            engine,
+            sdl,
             strategy,
             init_level)
 
