@@ -135,6 +135,7 @@ class DirtyWholes(DrawingStrategy):
 
         # Entities that change their onscreen status are dirty
         elif on_screen != was_on_screen:
+            print "%s has changed it's onscreen status" % entity
             return True
 
         return False

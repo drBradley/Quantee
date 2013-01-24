@@ -253,7 +253,7 @@ class DumbLevel(Level):
         stage = Stage((800, 600), ['bg', 'movers'], 'movers')
 
         # Spawn the entities
-        stage.add_spawn(Environment(5, 5, 'bg'), 'bg')
+        stage.add_spawn(Environment(30, 30, 'bg'), 'bg')
 
         stage.add_spawn(Environment(0, 0, 'h_bar', True), 'bg')
 
@@ -267,7 +267,7 @@ class DumbLevel(Level):
 
         stage.add_spawn(Star(710, 30))
 
-        stage.add_spawn(Psi(35, 35))
+        stage.add_spawn(Psi(35, 300))
 
         stage.spawn()
 
