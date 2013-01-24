@@ -74,6 +74,41 @@ class GetCollected(Behaviour):
                 next.dead = True
 
 
+class JumpNRun(Behaviour):
+
+    def __init__(self, g):
+
+        self.__g = g
+
+        self.__v = (0, 0)
+
+    def prepare(self, prev, curr, next):
+
+        pass
+
+    def decide(self, dt, event, stage, hint, prev, curr, next):
+
+        g = self.__g
+
+        vx, vy = self.__v
+
+        vy += g * dt
+
+        dx, dy = vx * dt, vy * dt
+
+        for box, pbox in [(next.b_box, curr.b_box),
+                          (next.r_box, curr.r_box)]:
+
+            box.move_to(pbox.x, pbox.y)
+            box.move_by(dx, dy)
+
+        self.__v = (vx, vy)
+
+        print "vy =", vy
+        print "dy =", dy
+        print next.r_box, curr.r_box, next.r_box == curr.r_box
+
+
 class Psi(Entity):
     """Psi(x, y) -> Psi, the quantum boy"""
 
@@ -84,7 +119,7 @@ class Psi(Entity):
             (40, 50),
             (40, 50),
             'psi',
-            DoNothing())
+            JumpNRun(-1e-5))
 
 
 class Star(Entity):
