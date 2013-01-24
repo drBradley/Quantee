@@ -104,10 +104,6 @@ class JumpNRun(Behaviour):
 
         self.__v = (vx, vy)
 
-        print "vy =", vy
-        print "dy =", dy
-        print next.r_box, curr.r_box, next.r_box == curr.r_box
-
 
 class Psi(Entity):
     """Psi(x, y) -> Psi, the quantum boy"""
