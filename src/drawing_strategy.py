@@ -86,8 +86,16 @@ class DirtyWholes(DrawingStrategy):
 
     def __is_dirty(self, entity, viewport, others=set()):
 
-        # Something that isn't on screen never needs to be redrawn
-        if collide(entity.present().r_box(), viewport):
+        on_screen = collide(
+            entity.present().r_box(),
+            viewport)
+
+        was_on_screen = collide(
+            entity.past().r_box(),
+            viewport)
+
+        # Thing that are and were on screen have quite a couple of rules...
+        if on_screen and was_on_screen:
 
             # Is the stretegy being suppresed?
             if self.__force_all:
@@ -124,6 +132,10 @@ class DirtyWholes(DrawingStrategy):
 
                 if collided or collide_now:
                     return True
+
+        # Entities that change their onscreen status are dirty
+        elif on_screen != was_on_screen:
+            return True
 
         return False
 
