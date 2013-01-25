@@ -29,14 +29,14 @@ class DoNothing(Behaviour):
 
 
 class Environment(Entity):
-    """Environment(x, y, image_name[, is_obstacle]) -> a still image"""
+    """Environment(x, y, (w, h), image_name[, is_obstacle]) -> a still image"""
 
-    def __init__(self, x, y, image_name, is_obstacle=False):
+    def __init__(self, x, y, size, image_name, is_obstacle=False):
 
         super(Environment, self).__init__(
             (x, y),
-            (400, 400),
-            (400, 400),
+            size,
+            size,
             image_name,
             DoNothing())
 
@@ -273,17 +273,35 @@ class DumbLevel(Level):
         stage = Stage((800, 600), ['bg', 'movers'], 'movers')
 
         # Spawn the entities
-        stage.add_spawn(Environment(30, 30, 'bg'), 'bg')
+        stage.add_spawn(Environment(30, 30,
+                                    (740, 540),
+                                    'bg'),
+                        'bg')
 
-        stage.add_spawn(Environment(0, 0, 'h_bar', True), 'bg')
+        stage.add_spawn(Environment(0, 0,
+                                    (800, 30),
+                                    'h_bar', True),
+                        'bg')
 
-        stage.add_spawn(Environment(0, 570, 'h_bar', True), 'bg')
+        stage.add_spawn(Environment(0, 570,
+                                    (800, 30),
+                                    'h_bar', True),
+                        'bg')
 
-        stage.add_spawn(Environment(0, 30, 'v_bar', True), 'bg')
+        stage.add_spawn(Environment(0, 30,
+                                    (30, 540),
+                                    'v_bar', True),
+                        'bg')
 
-        stage.add_spawn(Environment(770, 30, 'v_bar', True), 'bg')
+        stage.add_spawn(Environment(770, 30,
+                                    (30, 540),
+                                    'v_bar', True),
+                        'bg')
 
-        stage.add_spawn(Environment(370, 30, 'sqr', True), 'bg')
+        stage.add_spawn(Environment(370, 30,
+                                    (60, 60),
+                                    'sqr', True),
+                        'bg')
 
         stage.add_spawn(Star(710, 30))
 
