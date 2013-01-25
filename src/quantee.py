@@ -3,8 +3,6 @@
 import os.path
 import math
 
-import pygame
-
 from game import Game
 from level import Level
 from drawing_strategy import DirtyWholes
@@ -76,9 +74,13 @@ class GetCollected(Behaviour):
 
 class JumpNRun(Behaviour):
 
-    def __init__(self, g, v_max, starts_on_ground=False):
+    def __init__(self, g, a_run, v_stop, v_max, starts_on_ground=False):
 
         self.__g = g
+
+        self.__a_run = a_run
+        self.__v_stop = v_stop
+
         self.__v_max = v_max
 
         self.__v = (0, 0)
@@ -105,6 +107,29 @@ class JumpNRun(Behaviour):
         else:
 
             vy = 0
+
+        self.__v = (vx, vy)
+
+    def run_accel(self, dt, event):
+        """JNR.run_accel(dt, event)
+
+        Alter the velocity's horizontal component.
+        """
+
+        a_run = self.__a_run
+        #v_stop = self.__v_stop
+
+        vx, vy = self.__v
+
+        if event.left_is_down():
+            vx -= a_run * dt
+
+        elif event.right_is_down():
+            vx += a_run * dt
+
+        else:
+
+            vx = 0
 
         self.__v = (vx, vy)
 
@@ -137,6 +162,8 @@ class JumpNRun(Behaviour):
         dx = vx * dt
         dy = vy * dt
 
+        dys = []
+
         for entity in stage:
 
             # And would collide with an obstacle
@@ -150,13 +177,11 @@ class JumpNRun(Behaviour):
 
                     ground = obox.y + obox.h
 
-                    dy = ground - box.y
+                    dys.append(ground - box.y)
 
-                    vy = dy / dt
+        if dys:
 
-                    self.__on_ground = True
-
-                    print "Hit the ground!"
+            vy = min(dys) / dt
 
         self.__v = (vx, vy)
 
@@ -165,10 +190,6 @@ class JumpNRun(Behaviour):
 
         Move the entity by (dx, dy).
         """
-
-        if dx != 0 or dy != 0:
-
-            print "Moving!"
 
         for box, pbox in [(next.b_box, curr.b_box),
                           (next.r_box, curr.r_box)]:
@@ -179,6 +200,8 @@ class JumpNRun(Behaviour):
     def decide(self, dt, event, stage, hint, prev, curr, next):
 
         self.freefall(dt)
+
+        self.run_accel(dt, event)
 
         self.limit_speed(dt)
 
@@ -204,7 +227,7 @@ class Psi(Entity):
             (40, 50),
             (40, 50),
             'psi',
-            JumpNRun(-1e-3, 0.1))
+            JumpNRun(-1e-3, 1e-4, 0.05, 0.1))
 
 
 class Star(Entity):

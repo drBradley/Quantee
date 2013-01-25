@@ -128,12 +128,12 @@ class SDL(Engine):
         Defaults to False.
 
       * `allowed_events` is a list of PyGame event types that shouldn't be
-        ommited. Defaults to [pygame.QUIT, pygame.KEYDOWN]
+        ommited. Defaults to [pygame.QUIT, pygame.KEYDOWN, pygame.KEYUP]
     """
 
     def __init__(self, title, screen_size, color_key, asset_manager,
                  fullscreen=False, max_fps=32, use_busy_loop=False,
-                 allowed_events=[pygame.QUIT, pygame.KEYDOWN]):
+                 allowed_events=[pygame.QUIT, pygame.KEYDOWN, pygame.KEYUP]):
 
         # Prerequisite initialisation
         super(SDL, self).__init__()

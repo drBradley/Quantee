@@ -8,46 +8,64 @@ from sdl import SDL
 __all__ = ['QEngine']
 
 
+down = dict(left=False,
+            right=False)
+
+
 class Event(object):
     """Wrapper for raw SDL events used in QTG"""
 
-    def __init__(self, raw_evt):
+    def __init__(self, raw):
 
-        self.__raw_evt = raw_evt
+        if raw.type == pygame.KEYDOWN:
+
+            if raw.key == pygame.K_LEFT:
+
+                down['left'] = True
+
+            elif raw.key == pygame.K_RIGHT:
+
+                down['right'] = True
+
+        elif raw.type == pygame.KEYUP:
+
+            if raw.key == pygame.K_LEFT:
+
+                down['left'] = False
+
+            elif raw.key == pygame.K_RIGHT:
+
+                down['right'] = False
+
+        self.__raw = raw
 
     def quit(self):
 
-        raw = self.__raw_evt
+        raw = self.__raw
 
-        return raw.type is pygame.QUIT
+        return raw.type == pygame.QUIT
 
     def escape(self):
 
-        raw = self.__raw_evt
+        raw = self.__raw
 
-        return (raw.type is pygame.KEYDOWN and
-                raw.key is pygame.K_ESCAPE)
+        return (raw.type == pygame.KEYDOWN and
+                raw.key == pygame.K_ESCAPE)
 
-    def left_pressed(self):
+    def left_is_down(self):
 
-        raw = self.__raw_evt
+        return down['left']
 
-        return (raw.type is pygame.KEYDOWN and
-                raw.key is pygame.K_LEFT)
+    def right_is_down(self):
 
-    def right_pressed(self):
-
-        raw = self.__raw_evt
-
-        return (raw.type is pygame.KEYDOWN and
-                raw.key is pygame.K_RIGHT)
+        return down['right']
 
     def jump_pressed(self):
 
-        raw = self.__raw_evt
+        raw = self.__raw
 
-        return (raw.type is pygame.KEYDOWN and
-                raw.key is pygame.K_SPACE)
+        return (raw.type == pygame.KEYDOWN and
+                raw.key == pygame.K_SPACE)
 
 
 class QEngine(SDL):
