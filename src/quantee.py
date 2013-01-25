@@ -88,20 +88,35 @@ class JumpNRun(Behaviour):
 
         pass
 
-    def decide(self, dt, event, stage, hint, prev, curr, next):
+    def freefall(self, dt):
+        """JNR.freefall(dt)
 
-        # Get the parametes
+        Makes the Entity fall down with the set gravitational acceleration
+        unless it touches the ground.
+        """
+
         g = self.__g
-        v_max = self.__v_max
-
-        # Get the previous speed value and alter it
         vx, vy = self.__v
 
         if not self.__on_ground:
 
             vy += g * dt
 
-        # Renormalise speed when necessary
+        else:
+
+            vy = 0
+
+        self.__v = (vx, vy)
+
+    def limit_speed(self, dt):
+        """JNR.limit_speed(st)
+
+        Ensure the speed doesn't cross the maximum set.
+        """
+
+        v_max = self.__v_max
+        vx, vy = self.__v
+
         v_norm = math.sqrt(vx ** 2 + vy ** 2)
 
         if v_norm > v_max:
@@ -109,42 +124,74 @@ class JumpNRun(Behaviour):
             vx *= v_max / v_norm
             vy *= v_max / v_norm
 
-        # Calculate displacements
-        dx, dy = vx * dt, vy * dt
+        self.__v = (vx, vy)
 
-        # When the character is falling
-        if not self.__on_ground:
+    def handle_ground_collision(self, dt, stage, box):
+        """JNR.handle_ground_collision(dt, stage, box)
 
-            box = curr.b_box
+        Ensure the character doesn't fall through the ground.
+        """
 
-            for entity in stage:
+        vx, vy = self.__v
 
-                # And would collide with an obstacle
-                if isinstance(entity, Environment) and entity.is_obstacle():
+        dx = vx * dt
+        dy = vy * dt
 
-                    obox = entity.present().b_box()
+        for entity in stage:
 
-                    # Don't allow it to fall through
-                    if box.y + dy <= obox.y + obox.h <= box.y and\
-                            obox.x <= box.x + dx <= obox.x + obox.w:
+            # And would collide with an obstacle
+            if isinstance(entity, Environment) and entity.is_obstacle():
 
-                        ground = obox.y + obox.h
+                obox = entity.present().b_box()
 
-                        dy = ground - box.y
+                # Don't allow it to fall through
+                if box.y + dy <= obox.y + obox.h <= box.y and\
+                        obox.x <= box.x + dx <= obox.x + obox.w:
 
-                        vy = 0
+                    ground = obox.y + obox.h
 
-                        self.__on_ground = True
+                    dy = ground - box.y
 
-        # Move the Entity
+                    vy = dy / dt
+
+                    self.__on_ground = True
+
+                    print "Hit the ground!"
+
+        self.__v = (vx, vy)
+
+    def move(self, dx, dy, curr, next):
+        """JNR.move(dx, dy, curr, next)
+
+        Move the entity by (dx, dy).
+        """
+
+        if dx != 0 or dy != 0:
+
+            print "Moving!"
+
         for box, pbox in [(next.b_box, curr.b_box),
                           (next.r_box, curr.r_box)]:
 
             box.move_to(pbox.x, pbox.y)
             box.move_by(dx, dy)
 
-        # Store current speed
-        self.__v = (vx, vy)
+    def decide(self, dt, event, stage, hint, prev, curr, next):
+
+        self.freefall(dt)
+
+        self.limit_speed(dt)
+
+        if not self.__on_ground:
+
+            self.handle_ground_collision(dt, stage, curr.b_box)
+
+        vx, vy = self.__v
+
+        dx = vx * dt
+        dy = vy * dt
+
+        self.move(dx, dy, curr, next)
 
 
 class Psi(Entity):
