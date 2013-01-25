@@ -173,7 +173,8 @@ class JumpNRun(Behaviour):
 
                 # Don't allow it to fall through
                 if box.y + dy <= obox.y + obox.h <= box.y and\
-                        obox.x <= box.x + dx <= obox.x + obox.w:
+                        (obox.x <= box.x + dx <= obox.x + obox.w or
+                         obox.x <= box.x + box.h + dx <= obox.x + obox.w):
 
                     ground = obox.y + obox.h
 
