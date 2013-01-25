@@ -76,13 +76,13 @@ class GetCollected(Behaviour):
 
 class JumpNRun(Behaviour):
 
-    def __init__(self, g, v_max):
+    def __init__(self, g, v_max, starts_on_ground=False):
 
         self.__g = g
-
         self.__v_max = v_max
 
         self.__v = (0, 0)
+        self.__on_ground = starts_on_ground
 
     def prepare(self, prev, curr, next):
 
@@ -97,24 +97,46 @@ class JumpNRun(Behaviour):
         # Get the previous speed value and alter it
         vx, vy = self.__v
 
-        vy += g * dt
+        if not self.__on_ground:
+
+            vy += g * dt
 
         # Renormalise speed when necessary
         v_norm = math.sqrt(vx ** 2 + vy ** 2)
 
         if v_norm > v_max:
 
-            print "Scaling velocity..."
-            print "Before: (%f, %f)" % (vx, vy)
-
             vx *= v_max / v_norm
             vy *= v_max / v_norm
 
-            print "After: (%f, %f)" % (vx, vy)
-
-        # Move the Entity
+        # Calculate displacements
         dx, dy = vx * dt, vy * dt
 
+        # When the character is falling
+        if not self.__on_ground:
+
+            box = curr.b_box
+
+            for entity in stage:
+
+                # And would collide with an obstacle
+                if isinstance(entity, Environment) and entity.is_obstacle():
+
+                    obox = entity.present().b_box()
+
+                    # Don't allow it to fall through
+                    if box.y + dy <= obox.y + obox.h <= box.y and\
+                            obox.x <= box.x + dx <= obox.x + obox.w:
+
+                        ground = obox.y + obox.h
+
+                        dy = ground - box.y
+
+                        vy = 0
+
+                        self.__on_ground = True
+
+        # Move the Entity
         for box, pbox in [(next.b_box, curr.b_box),
                           (next.r_box, curr.r_box)]:
 
