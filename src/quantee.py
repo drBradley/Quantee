@@ -166,15 +166,13 @@ class JumpNRun(Behaviour):
 
         for entity in stage:
 
-            # And would collide with an obstacle
             if isinstance(entity, Environment) and entity.is_obstacle():
 
                 obox = entity.present().b_box()
 
-                # Don't allow it to fall through
                 if box.y + dy <= obox.y + obox.h <= box.y and\
                         (obox.x <= box.x + dx <= obox.x + obox.w or
-                         obox.x <= box.x + box.h + dx <= obox.x + obox.w):
+                         obox.x <= box.x + box.w + dx <= obox.x + obox.w):
 
                     ground = obox.y + obox.h
 
@@ -182,7 +180,53 @@ class JumpNRun(Behaviour):
 
         if dys:
 
-            vy = min(dys) / dt
+            vy = max(dys) / dt
+
+        self.__v = (vx, vy)
+
+    def handle_wall_collision(self, dt, stage, box):
+        """JNR.handle_wall_collision(dt, stage, box)
+
+        Keep the character from passing through walls.
+        """
+
+        vx, vy = self.__v
+
+        dx = vx * dt
+        dy = vy * dt
+
+        for entity in stage:
+
+            if isinstance(entity, Environment) and entity.is_obstacle():
+
+                obox = entity.present().b_box()
+
+                hits_wall_on_left = box.x + dx <= obox.x + obox.w <= box.x
+                hits_wall_on_right = box.x + box.w < obox.x <= box.x + box.w + dx
+
+                y_matches = (
+                    obox.y <= box.y + dy <= obox.y + obox.h or
+                    obox.y <= box.y + box.h + dy <= obox.y + obox.h)
+
+                if hits_wall_on_left and y_matches:
+
+                    print obox, "will be hit from the right side by", box
+
+                    dx = max(dx, obox.x + obox.w - box.x)
+
+                elif hits_wall_on_right and y_matches:
+
+                    print obox, "will be hit from the left side by", box
+
+                    print "dx = %f\tx = %f\tw = %f\t xo = %f" % (
+                        dx, box.x, box.w, obox.x)
+
+                    dx = min(dx, obox.x - box.x - box.w - 1)
+                    # TODO: Figure out why the following is necessary
+                    dx = max(dx, 0)  # prevent bouncing off the wall
+
+        vx = dx / dt
+        print "dx = %f, vx = %f" % (dx, vx)
 
         self.__v = (vx, vy)
 
@@ -209,6 +253,8 @@ class JumpNRun(Behaviour):
         if not self.__on_ground:
 
             self.handle_ground_collision(dt, stage, curr.b_box)
+
+        self.handle_wall_collision(dt, stage, curr.b_box)
 
         vx, vy = self.__v
 
