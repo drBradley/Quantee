@@ -119,15 +119,16 @@ class JumpNRun(Behaviour):
 
         vx, vy = self.__v
 
-        if event.left_is_down():
-            vx -= a * dt
+        if self.__on_ground:
 
-        elif event.right_is_down():
-            vx += a * dt
+            if event.left_is_down():
+                vx -= a * dt
 
-        else:
+            elif event.right_is_down():
+                vx += a * dt
 
-            vx = 0.
+            else:
+                vx = 0.
 
         self.__v = (vx, vy)
 
