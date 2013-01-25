@@ -28,6 +28,27 @@ class Event(object):
         return (raw.type is pygame.KEYDOWN and
                 raw.key is pygame.K_ESCAPE)
 
+    def left_pressed(self):
+
+        raw = self.__raw_evt
+
+        return (raw.type is pygame.KEYDOWN and
+                raw.key is pygame.K_LEFT)
+
+    def right_pressed(self):
+
+        raw = self.__raw_evt
+
+        return (raw.type is pygame.KEYDOWN and
+                raw.key is pygame.K_RIGHT)
+
+    def jump_pressed(self):
+
+        raw = self.__raw_evt
+
+        return (raw.type is pygame.KEYDOWN and
+                raw.key is pygame.K_SPACE)
+
 
 class QEngine(SDL):
 
