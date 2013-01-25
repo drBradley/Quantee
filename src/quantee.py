@@ -15,7 +15,7 @@ from behaviour import Behaviour
 from boxes import Box, collide
 
 from assets import QAssets
-from sdl import SDL
+from qengine import QEngine
 
 
 class DoNothing(Behaviour):
@@ -299,11 +299,7 @@ class DumbDirector(Director):
 
         # Close the game when the window gets closed or the player presses
         # Escape
-        if (event is not None and
-                (event.type == pygame.QUIT or
-
-                (event.type == pygame.KEYDOWN and
-                 event.key == pygame.K_ESCAPE))):
+        if event.quit() or event.escape():
 
             for i in range(len(levels)):
                 levels.pop()
@@ -380,11 +376,11 @@ class QuanteeTheGame(Game):
 
         color_key = (255, 0, 255)
 
-        sdl = SDL("Quantee",
-                  (800, 600),
-                  color_key,
-                  QAssets(color_key, asset_path),
-                  max_fps=32)
+        sdl = QEngine("Quantee",
+                      (800, 600),
+                      color_key,
+                      QAssets(color_key, asset_path),
+                      max_fps=32)
 
         strategy = DirtyWholes()
 
