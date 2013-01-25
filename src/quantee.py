@@ -376,6 +376,11 @@ class DumbLevel(Level):
                                     'sqr', True),
                         'bg')
 
+        stage.add_spawn(Environment(30, 30,
+                                    (60, 60),
+                                    'sqr', True),
+                        'bg')
+
         stage.add_spawn(Star(710, 30))
 
         stage.add_spawn(Psi(35, 300))
