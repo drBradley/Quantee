@@ -186,8 +186,6 @@ class JumpNRun(Behaviour):
         dx = vx * dt
         dy = vy * dt
 
-        dys = []
-
         for entity in stage:
 
             if isinstance(entity, Environment) and entity.is_obstacle():
@@ -200,13 +198,11 @@ class JumpNRun(Behaviour):
 
                     ground = obox.y + obox.h
 
-                    dys.append(ground - box.y)
+                    dy = max(dy, ground - box.y)
 
                     self.__on_ground = True
 
-        if dys:
-
-            vy = max(dys) / dt
+        vy = dy / dt
 
         self.__v = (vx, vy)
 
