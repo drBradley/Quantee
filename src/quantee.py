@@ -74,12 +74,11 @@ class GetCollected(Behaviour):
 
 class JumpNRun(Behaviour):
 
-    def __init__(self, g, a_run, v_stop, v_max, starts_on_ground=False):
+    def __init__(self, g, a_jump, a_run, v_max, starts_on_ground=False):
 
         self.__g = g
-
+        self.__a_jump = a_jump
         self.__a_run = a_run
-        self.__v_stop = v_stop
 
         self.__v_max = v_max
 
@@ -116,20 +115,44 @@ class JumpNRun(Behaviour):
         Alter the velocity's horizontal component.
         """
 
-        a_run = self.__a_run
-        #v_stop = self.__v_stop
+        a = self.__a_run
 
         vx, vy = self.__v
 
         if event.left_is_down():
-            vx -= a_run * dt
+            vx -= a * dt
 
         elif event.right_is_down():
-            vx += a_run * dt
+            vx += a * dt
 
         else:
 
-            vx = 0
+            vx = 0.
+
+        self.__v = (vx, vy)
+
+    def jump(self, dt, event):
+        """JNR.jump(dt, event)
+
+        Apply an impulse force if the jump button was pressed and the character
+        is on ground.
+        """
+
+        a_jump = self.__a_jump
+
+        vx, vy = self.__v
+
+        if event.jump_pressed() and self.__on_ground:
+
+            print "Jump!"
+
+            print "vy = %f\ta_jump = %f\tdt = %f" % (vy, a_jump, dt)
+
+            vy += a_jump * dt
+
+            print "vy' = %f" % vy
+
+            self.__on_ground = False
 
         self.__v = (vx, vy)
 
@@ -177,6 +200,8 @@ class JumpNRun(Behaviour):
                     ground = obox.y + obox.h
 
                     dys.append(ground - box.y)
+
+                    self.__on_ground = True
 
         if dys:
 
@@ -248,6 +273,8 @@ class JumpNRun(Behaviour):
 
         self.run_accel(dt, event)
 
+        self.jump(dt, event)
+
         self.limit_speed(dt)
 
         if not self.__on_ground:
@@ -274,7 +301,7 @@ class Psi(Entity):
             (40, 50),
             (40, 50),
             'psi',
-            JumpNRun(-1e-3, 1e-4, 0.05, 0.1))
+            JumpNRun(-1e-4, 7.5e-3, 1e-4, 0.3))
 
 
 class Star(Entity):
@@ -429,7 +456,7 @@ class DumbLevel(Level):
 
         stage.add_spawn(Star(710, 30))
 
-        stage.add_spawn(Psi(35, 300))
+        stage.add_spawn(Psi(35, 100))
 
         stage.spawn()
 
