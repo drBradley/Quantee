@@ -110,8 +110,8 @@ class JumpNRun(Behaviour):
 
         self.__v = (vx, vy)
 
-    def run_accel(self, dt, event):
-        """JNR.run_accel(dt, event)
+    def run(self, dt, event):
+        """JNR.run(dt, event)
 
         Alter the velocity's horizontal component.
         """
@@ -286,7 +286,7 @@ class JumpNRun(Behaviour):
 
         self.freefall(dt)
 
-        self.run_accel(dt, event)
+        self.run(dt, event)
 
         self.jump(dt, event)
 
