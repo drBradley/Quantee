@@ -74,11 +74,12 @@ class GetCollected(Behaviour):
 
 class JumpNRun(Behaviour):
 
-    def __init__(self, g, a_jump, a_run, drag, friction, starts_on_ground=False):
+    def __init__(self, g, a_jump, a_run, a_fall, drag, friction, starts_on_ground=False):
 
         self.__g = g
         self.__a_jump = a_jump
         self.__a_run = a_run
+        self.__a_fall = a_fall
 
         self.__drag = drag
         self.__friction = friction
@@ -116,18 +117,24 @@ class JumpNRun(Behaviour):
         Alter the velocity's horizontal component.
         """
 
-        a = self.__a_run
+        accel = self.__a_run if self.__on_ground else self.__a_fall
+        decel = self.__friction if self.__on_ground else self.__drag
 
         vx, vy = self.__v
 
         if event.left_is_down():
-            vx -= a * dt
+
+            vx -= accel * dt
 
         elif event.right_is_down():
-            vx += a * dt
+
+            vx += accel * dt
 
         else:
-            vx = 0.
+
+            sign = math.copysign(1, vx)
+
+            vx -= sign * min(decel * dt, abs(vx))
 
         self.__v = (vx, vy)
 
@@ -153,41 +160,6 @@ class JumpNRun(Behaviour):
             print "vy' = %f" % vy
 
             self.__on_ground = False
-
-        self.__v = (vx, vy)
-
-    def drag_or_friction(self, dt):
-        """JNR.limit_speed(st)
-
-        Apply friction or drag.
-        """
-
-        friction = self.__friction
-        drag = self.__drag
-
-        vx, vy = self.__v
-
-        if self.__on_ground:
-
-            if abs(vx) > 0:
-
-                sign = math.copysign(1, vx)
-
-                vx -= sign * friction * dt
-
-        else:
-
-            if abs(vx) > 0:
-
-                sign = math.copysign(1, vx)
-
-                vx -= sign * drag * vx * dt
-
-            if abs(vy) > 0:
-
-                sign = math.copysign(1, vy)
-
-                vy -= sign * drag * vy * dt
 
         self.__v = (vx, vy)
 
@@ -290,8 +262,6 @@ class JumpNRun(Behaviour):
 
         self.jump(dt, event)
 
-        self.drag_or_friction(dt)
-
         self.handle_ground_collision(dt, stage, curr.b_box)
 
         self.handle_wall_collision(dt, stage, curr.b_box)
@@ -314,7 +284,7 @@ class Psi(Entity):
             (40, 50),
             (40, 50),
             'psi',
-            JumpNRun(-1e-3, 3e-2, 1e-4, 0, 1e-6))
+            JumpNRun(-1e-3, 3e-2, 1e-4, 1e-5, 5e-5, 5e-4))
 
 
 class Star(Entity):
