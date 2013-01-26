@@ -74,13 +74,14 @@ class GetCollected(Behaviour):
 
 class JumpNRun(Behaviour):
 
-    def __init__(self, g, a_jump, a_run, v_max, starts_on_ground=False):
+    def __init__(self, g, a_jump, a_run, drag, friction, starts_on_ground=False):
 
         self.__g = g
         self.__a_jump = a_jump
         self.__a_run = a_run
 
-        self.__v_max = v_max
+        self.__drag = drag
+        self.__friction = friction
 
         self.__v = (0, 0)
         self.__on_ground = starts_on_ground
@@ -119,16 +120,14 @@ class JumpNRun(Behaviour):
 
         vx, vy = self.__v
 
-        if self.__on_ground:
+        if event.left_is_down():
+            vx -= a * dt
 
-            if event.left_is_down():
-                vx -= a * dt
+        elif event.right_is_down():
+            vx += a * dt
 
-            elif event.right_is_down():
-                vx += a * dt
-
-            else:
-                vx = 0.
+        else:
+            vx = 0.
 
         self.__v = (vx, vy)
 
@@ -157,21 +156,38 @@ class JumpNRun(Behaviour):
 
         self.__v = (vx, vy)
 
-    def limit_speed(self, dt):
+    def drag_or_friction(self, dt):
         """JNR.limit_speed(st)
 
-        Ensure the speed doesn't cross the maximum set.
+        Apply friction or drag.
         """
 
-        v_max = self.__v_max
+        friction = self.__friction
+        drag = self.__drag
+
         vx, vy = self.__v
 
-        v_norm = math.sqrt(vx ** 2 + vy ** 2)
+        if self.__on_ground:
 
-        if v_norm > v_max:
+            if abs(vx) > 0:
 
-            vx *= v_max / v_norm
-            vy *= v_max / v_norm
+                sign = math.copysign(1, vx)
+
+                vx -= sign * friction * dt
+
+        else:
+
+            if abs(vx) > 0:
+
+                sign = math.copysign(1, vx)
+
+                vx -= sign * drag * vx * dt
+
+            if abs(vy) > 0:
+
+                sign = math.copysign(1, vy)
+
+                vy -= sign * drag * vy * dt
 
         self.__v = (vx, vy)
 
@@ -274,7 +290,7 @@ class JumpNRun(Behaviour):
 
         self.jump(dt, event)
 
-        self.limit_speed(dt)
+        self.drag_or_friction(dt)
 
         self.handle_ground_collision(dt, stage, curr.b_box)
 
@@ -298,7 +314,7 @@ class Psi(Entity):
             (40, 50),
             (40, 50),
             'psi',
-            JumpNRun(-1e-4, 7.5e-3, 1e-4, 0.3))
+            JumpNRun(-1e-3, 3e-2, 1e-4, 0, 1e-6))
 
 
 class Star(Entity):
