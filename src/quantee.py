@@ -371,18 +371,25 @@ class DumbDirector(Director):
 
         self.__box = box
 
+    def empty(self, levels):
+        """DD.empty(levels)
+
+        Empty the levels stack.
+        """
+
+        for i in range(len(levels)):
+
+            levels.pop()
+
     def hints(self, entity):
 
         return None
 
     def orchestrate(self, dt, event, stage, levels, options):
 
-        # Close the game when the window gets closed or the player presses
-        # Escape
         if event.quit() or event.escape():
 
-            for i in range(len(levels)):
-                levels.pop()
+            self.empty(levels)
 
     def viewport(self, stage):
 
