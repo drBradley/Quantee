@@ -367,9 +367,12 @@ class DumbDirector(Director):
     Gives no hints to Entities.
     """
 
-    def __init__(self, box, toggle_fullscreen_each_s=15):
+    def __init__(self, box, star, toggle_fullscreen_each_s=15):
 
         self.__box = box
+
+        self.__star = star
+        self.__collected = False
 
     def empty(self, levels):
         """DD.empty(levels)
@@ -381,6 +384,53 @@ class DumbDirector(Director):
 
             levels.pop()
 
+    def show_win_message(self, stage):
+        """DD.show_win_message(stage)
+
+        Shows the win message onscreen.
+        """
+
+        w, h = 597, 286
+
+        x, y = 800 - 60 - w, 120
+
+        win_message = Environment(
+            x, y,
+            (w, h),
+            'win_screen')
+
+        stage.add_spawn(win_message, 'overlay')
+
+    def handle_star_collection(self, event, stage, levels):
+        """DD.handle_star_collection(event, stage, levels)
+
+        Deals with the collection of a star and game restarting.
+        """
+
+        if not self.__collected:
+
+            collected = True
+
+            for entity in stage:
+
+                if entity is self.__star:
+
+                    collected = False
+
+            self.__collected = collected
+
+            if collected:
+
+                    self.show_win_message(stage)
+
+        else:
+
+            if event.jump_pressed():
+
+                self.empty(levels)
+
+                levels.append(DumbLevel())
+
     def hints(self, entity):
 
         return None
@@ -390,6 +440,8 @@ class DumbDirector(Director):
         if event.quit() or event.escape():
 
             self.empty(levels)
+
+        self.handle_star_collection(event, stage, levels)
 
     def viewport(self, stage):
 
@@ -406,7 +458,9 @@ class DumbLevel(Level):
     def __init__(self):
 
         # Get a cam and a stage
-        stage = Stage((800, 600), ['bg', 'movers'], 'movers')
+        stage = Stage((800, 600), ['bg', 'movers', 'overlay'], 'movers')
+
+        star = Star(710, 30)
 
         # Spawn the entities
         stage.add_spawn(Environment(30, 30,
@@ -444,7 +498,7 @@ class DumbLevel(Level):
                                     'sqr', True),
                         'bg')
 
-        stage.add_spawn(Star(710, 30))
+        stage.add_spawn(star)
 
         stage.add_spawn(Psi(35, 100))
 
@@ -452,7 +506,7 @@ class DumbLevel(Level):
 
         # Call the superclasses initialiser
         super(DumbLevel, self).__init__(
-            DumbDirector(Box(0, 0, 800, 600)),
+            DumbDirector(Box(0, 0, 800, 600), star),
             stage)
 
 
