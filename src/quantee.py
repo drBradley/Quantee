@@ -181,6 +181,8 @@ class JumpNRun(Behaviour):
         Ensure the character doesn't fall through the ground.
         """
 
+        self.__on_ground = False
+
         vx, vy = self.__v
 
         dx = vx * dt
@@ -274,9 +276,7 @@ class JumpNRun(Behaviour):
 
         self.limit_speed(dt)
 
-        if not self.__on_ground:
-
-            self.handle_ground_collision(dt, stage, curr.b_box)
+        self.handle_ground_collision(dt, stage, curr.b_box)
 
         self.handle_wall_collision(dt, stage, curr.b_box)
 
