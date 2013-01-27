@@ -221,6 +221,31 @@ class JumpNRun(Behaviour):
 
         self.__v = (vx, vy)
 
+    def handle_ceiling_collision(self, dt, obox, box):
+        """JNR.handle_ceiling_collision(dt, obox, box)
+
+        Keep the character from jumping through ceilings.
+        """
+
+        vx, vy = self.__v
+
+        dx = vx * dt
+        dy = vy * dt
+
+        if box.y + box.h <= obox.y <= box.y + box.h + dy and\
+                (obox.x <= box.x + dx <= obox.x + obox.w or
+                    obox.x <= box.x + box.w + dx <= obox.x + obox.w):
+
+            ceiling = obox.y
+
+            head = box.y + box.h
+
+            dy = min(dy, ceiling - head)
+
+        vy = dy / dt
+
+        self.__v = (vx, vy)
+
     def move(self, dx, dy, curr, next):
         """JNR.move(dx, dy, curr, next)
 
@@ -249,15 +274,13 @@ class JumpNRun(Behaviour):
 
             if isinstance(entity, Environment) and entity.is_obstacle():
 
-                self.handle_ground_collision(
-                    dt,
-                    entity.present().b_box(),
-                    curr.b_box)
+                obox = entity.present().b_box()
 
-                self.handle_wall_collision(
-                    dt,
-                    entity.present().b_box(),
-                    curr.b_box)
+                self.handle_ground_collision(dt, obox, curr.b_box)
+
+                self.handle_wall_collision(dt, obox, curr.b_box)
+
+                self.handle_ceiling_collision(dt, obox, curr.b_box)
 
         # Move the character
         vx, vy = self.__v
