@@ -74,7 +74,8 @@ class GetCollected(Behaviour):
 
 class JumpNRun(Behaviour):
 
-    def __init__(self, g, a_jump, a_run, a_fall, drag, friction, starts_on_ground=False):
+    def __init__(self, g, a_jump, a_run, a_fall, drag, friction,
+                 starts_on_ground=False):
 
         self.__g = g
         self.__a_jump = a_jump
@@ -163,41 +164,33 @@ class JumpNRun(Behaviour):
 
         self.__v = (vx, vy)
 
-    def handle_ground_collision(self, dt, stage, box):
-        """JNR.handle_ground_collision(dt, stage, box)
+    def handle_ground_collision(self, dt, obox, box):
+        """JNR.handle_ground_collision(dt, obox, box)
 
         Ensure the character doesn't fall through the ground.
         """
-
-        self.__on_ground = False
 
         vx, vy = self.__v
 
         dx = vx * dt
         dy = vy * dt
 
-        for entity in stage:
+        if box.y + dy <= obox.y + obox.h <= box.y and\
+                (obox.x <= box.x + dx <= obox.x + obox.w or
+                    obox.x <= box.x + box.w + dx <= obox.x + obox.w):
 
-            if isinstance(entity, Environment) and entity.is_obstacle():
+            ground = obox.y + obox.h
 
-                obox = entity.present().b_box()
+            dy = max(dy, ground - box.y)
 
-                if box.y + dy <= obox.y + obox.h <= box.y and\
-                        (obox.x <= box.x + dx <= obox.x + obox.w or
-                         obox.x <= box.x + box.w + dx <= obox.x + obox.w):
-
-                    ground = obox.y + obox.h
-
-                    dy = max(dy, ground - box.y)
-
-                    self.__on_ground = True
+            self.__on_ground = True
 
         vy = dy / dt
 
         self.__v = (vx, vy)
 
-    def handle_wall_collision(self, dt, stage, box):
-        """JNR.handle_wall_collision(dt, stage, box)
+    def handle_wall_collision(self, dt, obox, box):
+        """JNR.handle_wall_collision(dt, obox, box)
 
         Keep the character from passing through walls.
         """
@@ -207,38 +200,24 @@ class JumpNRun(Behaviour):
         dx = vx * dt
         dy = vy * dt
 
-        for entity in stage:
+        hits_wall_on_left = box.x + dx <= obox.x + obox.w <= box.x
+        hits_wall_on_right = box.x + box.w < obox.x <= box.x + box.w + dx
 
-            if isinstance(entity, Environment) and entity.is_obstacle():
+        y_matches = (
+            obox.y <= box.y + dy <= obox.y + obox.h or
+            obox.y <= box.y + box.h + dy <= obox.y + obox.h)
 
-                obox = entity.present().b_box()
+        if hits_wall_on_left and y_matches:
 
-                hits_wall_on_left = box.x + dx <= obox.x + obox.w <= box.x
-                hits_wall_on_right = box.x + box.w < obox.x <= box.x + box.w + dx
+            dx = max(dx, obox.x + obox.w - box.x)
 
-                y_matches = (
-                    obox.y <= box.y + dy <= obox.y + obox.h or
-                    obox.y <= box.y + box.h + dy <= obox.y + obox.h)
+        elif hits_wall_on_right and y_matches:
 
-                if hits_wall_on_left and y_matches:
-
-                    print obox, "will be hit from the right side by", box
-
-                    dx = max(dx, obox.x + obox.w - box.x)
-
-                elif hits_wall_on_right and y_matches:
-
-                    print obox, "will be hit from the left side by", box
-
-                    print "dx = %f\tx = %f\tw = %f\t xo = %f" % (
-                        dx, box.x, box.w, obox.x)
-
-                    dx = min(dx, obox.x - box.x - box.w - 1)
-                    # TODO: Figure out why the following is necessary
-                    dx = max(dx, 0)  # prevent bouncing off the wall
+            dx = min(dx, obox.x - box.x - box.w - 1)
+            # TODO: Figure out why the following is necessary
+            dx = max(dx, 0)  # prevent bouncing off the wall
 
         vx = dx / dt
-        print "dx = %f, vx = %f" % (dx, vx)
 
         self.__v = (vx, vy)
 
@@ -256,16 +235,31 @@ class JumpNRun(Behaviour):
 
     def decide(self, dt, event, stage, hint, prev, curr, next):
 
+        # Apply forces
         self.freefall(dt)
 
         self.run(dt, event)
 
         self.jump(dt, event)
 
-        self.handle_ground_collision(dt, stage, curr.b_box)
+        # Handle collisions
+        self.__on_ground = False
 
-        self.handle_wall_collision(dt, stage, curr.b_box)
+        for entity in stage:
 
+            if isinstance(entity, Environment) and entity.is_obstacle():
+
+                self.handle_ground_collision(
+                    dt,
+                    entity.present().b_box(),
+                    curr.b_box)
+
+                self.handle_wall_collision(
+                    dt,
+                    entity.present().b_box(),
+                    curr.b_box)
+
+        # Move the character
         vx, vy = self.__v
 
         dx = vx * dt
