@@ -548,7 +548,8 @@ class QuanteeTheGame(Game):
                       (800, 600),
                       color_key,
                       QAssets(color_key, asset_path),
-                      max_fps=32)
+                      max_fps=32,
+                      fullscreen=True)
 
         strategy = DirtyWholes()
 
