@@ -1,13 +1,22 @@
 # -*- coding: utf-8 -*-
 
 
+import logging
+
 __all__ = ['Level']
+
+
+logger = logging.getLogger(__name__)
+
+logger.addHandler(logging.NullHandler())
 
 
 class Level(object):
     """Level class"""
 
     def __init__(self, director, stage):
+
+        logger.info("Level created")
 
         self.__director = director
         self.__stage = stage

@@ -1,6 +1,14 @@
 # -*- coding: utf-8 -*-
 
+
+import logging
+
 __all__ = ['Game']
+
+
+logger = logging.getLogger(__name__)
+
+logger.addHandler(logging.NullHandler())
 
 
 class Game(object):
@@ -17,9 +25,17 @@ class Game(object):
 
         self.__levels = [init_level]
 
+        logger.info('Game created')
+        logger.info('Steps per render limited to %d', max_steps_per_render)
+        logger.info('Physics time step is %d', timestep)
+
     def __levels_left(self):
 
-        return len(self.__levels)
+        left = len(self.__levels)
+
+        logger.debug('There are %d levels left in the level stack', left)
+
+        return left
 
     def run(self):
         """G.run()
@@ -38,7 +54,12 @@ class Game(object):
             # Render the level and get the render time
             if self.__engine.options().screen_changed():
 
+                logger.warning('Deprecated! Forcing redraw of all Entities '
+                               'after resolution change')
+
                 self.__drawing_strategy.force_all()
+
+            logger.info('Drawing a frame')
 
             self.__levels[-1].render(
                 self.__engine,
@@ -46,10 +67,14 @@ class Game(object):
 
             dt = self.__engine.dt()
 
+            logger.info('The render time was %f', dt)
+
             # Perform enough logical steps of the game to cover the rendering
             # time
             time_left += dt
             steps = 0
+
+            logger.info('The time accumulator is %f', time_left)
 
             while (time_left >= dt and
                    steps < max_steps_per_render):
@@ -59,6 +84,8 @@ class Game(object):
                 if self.__levels_left():
 
                     event = self.__engine.input()
+
+                    logger.info('Performing physics steps')
 
                     self.__levels[-1].step(
                         timestep,
@@ -71,4 +98,6 @@ class Game(object):
                 time_left -= timestep
 
             # Let the engine do whatever it needs to
+            logger.info('Calling the Engine\'s update method')
+
             self.__engine.update()

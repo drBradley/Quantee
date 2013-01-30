@@ -1,7 +1,15 @@
 # -*- coding: utf-8 -*-
 
 
+import logging
+
+
 __all__ = ['Stage']
+
+
+logger = logging.getLogger(__name__)
+
+logger.addHandler(logging.NullHandler())
 
 
 class Stage(object):
@@ -33,6 +41,9 @@ class Stage(object):
         # To properly render everything we need to keep track of what dies
         self.__dirty = set()
         self.__death_observers = []
+
+        logger.info('%dx%d Stage created', size[0], size[1])
+        logger.info('%d layers created: %s', len(layers), layers)
 
     def __iter__(self):
         """S.__iter__() <=> iter(S)"""
@@ -88,6 +99,8 @@ class Stage(object):
 
                     death_observer.tell_is_dead(corpse)
 
+        logger.info('Dead harvested')
+
     def add_spawn(self, entity, layer=None):
         """S.add_spawn(entity[, layer])
 
@@ -102,6 +115,11 @@ class Stage(object):
 
         self.__spawns[layer].append(entity)
 
+        logging.debug(
+            '%s will be spawned in %s the next physics step',
+            entity,
+            layer)
+
     def spawn(self):
         """S.spawn()
 
@@ -109,6 +127,12 @@ class Stage(object):
         """
 
         for name in self.__layer_names:
+
+            for spawn in self.__spawns[name]:
+
+                logger.debug('Spawning %s in %s',
+                             spawn,
+                             name)
 
             self.__layers[name].extend(self.__spawns[name])
 
@@ -120,3 +144,7 @@ class Stage(object):
         Adds a new observer of dying entities."""
 
         self.__death_observers.append(observer)
+
+        logger.info('%s now observes the deaths in %s',
+                    observer,
+                    self)

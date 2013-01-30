@@ -1,9 +1,16 @@
 # -*- coding: utf-8 -*-
 
 
+import logging
+
 from boxes import Box
 
 __all__ = ['Entity']
+
+
+logger = logging.getLogger(__name__)
+
+logger.addHandler(logging.NullHandler())
 
 
 class State(object):
@@ -75,6 +82,11 @@ class Entity(object):
             st.r_box = Box(x, y, *r_box)
 
         self.__behaviour.prepare(self.__prev, self.__curr, self.__next)
+
+        logger.info(
+            '%s driven by %s created',
+            self.__class__.__name__,
+            self.__behaviour.__class__.__name__)
 
     # State exposers
     def present(self):

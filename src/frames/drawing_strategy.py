@@ -1,10 +1,16 @@
 # -*- coding: utf-8 -*-
 
 
+import logging
+
 from boxes import collide
 
-
 __all__ = ['DrawingStrategy', 'Everyone', 'DirtyWholes']
+
+
+logger = logging.getLogger(__name__)
+
+logger.addHandler(logging.NullHandler())
 
 
 class DrawingStrategy(object):
@@ -35,6 +41,10 @@ class Everyone(DrawingStrategy):
     viewport.
     """
 
+    def __init__(self):
+
+        logger.warning('DrawingStrategies are soon to be deprecated!')
+
     def force_all(self):
 
         pass
@@ -53,6 +63,8 @@ class DirtyWholes(DrawingStrategy):
     redrawn."""
 
     def __init__(self):
+
+        logger.warning('DrawingStrategies are soon to be deprecated!')
 
         self.__active_stage_id = id(None)
 
