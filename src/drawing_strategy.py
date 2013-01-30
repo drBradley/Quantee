@@ -135,7 +135,7 @@ class DirtyWholes(DrawingStrategy):
 
         # Entities that change their onscreen status are dirty
         elif on_screen != was_on_screen:
-            print "%s has changed it's onscreen status" % entity
+
             return True
 
         return False
@@ -148,8 +148,6 @@ class DirtyWholes(DrawingStrategy):
             self.__active_stage_id = id(stage)
 
         dirty, maybe = self.__dirty, set()
-
-        print 'Initially, we have %d dirty objects' % len(dirty)
 
         for entity in stage:
 
@@ -184,8 +182,6 @@ class DirtyWholes(DrawingStrategy):
             if entity in dirty:
 
                 entity.draw(engine, viewport)
-
-        print "Redrawn %d entities" % len(dirty)
 
         # Clear up
         self.__dirty.clear()

@@ -152,13 +152,7 @@ class JumpNRun(Behaviour):
 
         if event.jump_pressed() and self.__on_ground:
 
-            print "Jump!"
-
-            print "vy = %f\ta_jump = %f\tdt = %f" % (vy, a_jump, dt)
-
             vy += a_jump * dt
-
-            print "vy' = %f" % vy
 
             self.__on_ground = False
 

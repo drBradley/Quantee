@@ -70,7 +70,5 @@ class Game(object):
 
                 time_left -= timestep
 
-            print "%d physics steps performed" % steps
-
             # Let the engine do whatever it needs to
             self.__engine.update()
