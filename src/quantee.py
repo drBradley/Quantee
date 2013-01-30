@@ -3,14 +3,14 @@
 import os.path
 import math
 
-from game import Game
-from level import Level
-from drawing_strategy import DirtyWholes
-from stage import Stage
-from director import Director
-from entity import Entity
-from behaviour import Behaviour
-from boxes import Box, collide
+from frames.game import Game
+from frames.level import Level
+from frames.drawing_strategy import DirtyWholes
+from frames.stage import Stage
+from frames.director import Director
+from frames.entity import Entity
+from frames.behaviour import Behaviour
+from frames.boxes import Box, collide
 
 from assets import QAssets
 from qengine import QEngine

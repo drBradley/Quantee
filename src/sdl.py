@@ -3,8 +3,8 @@
 
 import pygame
 
-from boxes import Box
-from engine import Engine, Options
+from frames.boxes import Box
+from frames.engine import Engine, Options
 
 __all__ = ['SDL']
 
