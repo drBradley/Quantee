@@ -3,6 +3,7 @@
 import os.path
 import math
 import argparse
+import logging.config
 
 from frames.game import Game
 from frames.level import Level
@@ -570,6 +571,34 @@ if __name__ == '__main__':
         default=False)
 
     args = parser.parse_args()
+
+    # Logging configuration
+    log_config = {
+        'version': 1,
+        'disable_existing_loggers': False,
+
+        'formatters': {
+            'simple': {
+                'format': '%(asctime)s\t%(name)s\t%(levelname)s\t%(message)s'
+            }
+        },
+
+        'handlers': {
+            'console': {
+                'class': 'logging.StreamHandler',
+                'level': 'DEBUG',
+                'formatter': 'simple',
+                'stream': 'ext://sys.stdout'
+            }
+        },
+
+        'root': {
+            'level': 'DEBUG',
+            'handlers': ['console']
+        }
+    }
+
+    logging.config.dictConfig(log_config)
 
     # Game startup
     game = QuanteeTheGame(args.fullscreen)
