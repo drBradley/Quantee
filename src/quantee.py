@@ -2,6 +2,7 @@
 
 import os.path
 import math
+import argparse
 
 from frames.game import Game
 from frames.level import Level
@@ -527,9 +528,9 @@ class DumbLevel(Level):
 
 
 class QuanteeTheGame(Game):
-    """QuanteeTheGame() -> our game"""
+    """QuanteeTheGame(fullscreen) -> our game"""
 
-    def __init__(self):
+    def __init__(self, fullscreen):
 
         asset_path = os.path.join(
             os.path.dirname(os.path.abspath(__file__)),
@@ -543,7 +544,7 @@ class QuanteeTheGame(Game):
                       color_key,
                       QAssets(color_key, asset_path),
                       max_fps=32,
-                      fullscreen=True)
+                      fullscreen=fullscreen)
 
         strategy = DirtyWholes()
 
@@ -556,5 +557,20 @@ class QuanteeTheGame(Game):
 
 
 if __name__ == '__main__':
-    game = QuanteeTheGame()
+
+    # Command line argument and options parsing
+    parser = argparse.ArgumentParser(
+        description='Hopefully a platformer in the future')
+
+    parser.add_argument(
+        '-F', '--fullscreen',
+        dest='fullscreen',
+        action='store_const',
+        const=True,
+        default=False)
+
+    args = parser.parse_args()
+
+    # Game startup
+    game = QuanteeTheGame(args.fullscreen)
     game.run()
