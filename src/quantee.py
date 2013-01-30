@@ -570,9 +570,18 @@ if __name__ == '__main__':
         const=True,
         default=False)
 
+    parser.add_argument(
+        '-D', '--debug',
+        dest='debug',
+        action='store_const',
+        const=True,
+        default=False)
+
     args = parser.parse_args()
 
     # Logging configuration
+    log_level = 'DEBUG' if args.debug else 'WARNING'
+
     log_config = {
         'version': 1,
         'disable_existing_loggers': False,
@@ -586,14 +595,14 @@ if __name__ == '__main__':
         'handlers': {
             'console': {
                 'class': 'logging.StreamHandler',
-                'level': 'DEBUG',
+                'level': log_level,
                 'formatter': 'simple',
                 'stream': 'ext://sys.stdout'
             }
         },
 
         'root': {
-            'level': 'DEBUG',
+            'level': log_level,
             'handlers': ['console']
         }
     }
