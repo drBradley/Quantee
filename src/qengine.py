@@ -1,11 +1,17 @@
 # -*- coding: utf-8 -*-
 
+import logging
+
 import pygame
 
 from sdl import SDL
 
 
 __all__ = ['QEngine']
+
+
+logger = logging.getLogger(__name__)
+logger.addHandler(logging.NullHandler())
 
 
 down = dict(left=False,
@@ -38,6 +44,13 @@ class Event(object):
                 down['right'] = False
 
         self.__raw = raw
+
+        logger.info("Wrapping Event created")
+        logger.info("Window closed: %s", self.quit())
+        logger.info("Escape pressed: %s", self.escape())
+        logger.info("Left is %s", "down" if self.left_is_down() else "up")
+        logger.info("Right is %s", "down" if self.right_is_down() else "up")
+        logger.info("Jump pressed: %s", self.jump_pressed())
 
     def quit(self):
 

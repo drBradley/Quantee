@@ -2,12 +2,18 @@
 
 
 import os
+import logging
 
 import pygame
 
 from sdl import AssetManager
 
 __all__ = ['QAssets']
+
+
+logger = logging.getLogger(__name__)
+
+logger.addHandler(logging.NullHandler())
 
 
 class QAssets(AssetManager):
@@ -37,8 +43,12 @@ class QAssets(AssetManager):
 
             self.__sprites[name] = sprite
 
+            logger.info("Sprite %s loaded into cache", name)
+
+        logger.info("Sprite %s retrieved from cache", name)
         return self.__sprites[name]
 
     def clear_cache(self):
 
+        logger.info("Sprite cache cleared")
         self.__sprites = {}
