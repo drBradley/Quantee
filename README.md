@@ -63,7 +63,7 @@ brief overview:
 
 ## Versioning
 
-The scheme is `major.minor.release-optional_suffix'. For versions below
+The scheme is `major.minor.release-optional_suffix`. For versions below
 `1.0.0` we allow breaking backward compatibility when the minor changes
 and introducing new API elements when the release changes. Post `1.0.0`
 we'll break compatibility only each major version, add new stuff each
