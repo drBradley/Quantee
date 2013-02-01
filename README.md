@@ -69,9 +69,16 @@ and introducing new API elements when the release changes. Post `1.0.0`
 we'll break compatibility only each major version, add new stuff each
 minor and fix bugs each release.
 
+## Change history
+
+See [CHANGES.md](CHANGES.md).
+
 ## License
 
-(c) Karol Marcjan and Bartosz Boguniewicz 2012-2013
+See [LICENSE](LICENSE).
 
-Soon to be GPL'd (once we take some time to figure out how to do it
-properly).
+## Contact
+
+Karol Marcjan: @szabba on both twitter and github
+
+Bartosz Boguniewicz: @drBradley on github
