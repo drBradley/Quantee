@@ -18,7 +18,7 @@
 # along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 
 
-__all__ = ['Box']
+__all__ = ['Box', 'collide']
 
 
 def bounding(b1, b2):
