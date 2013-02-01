@@ -22,6 +22,7 @@ class Game(object):
 
         self.__timestep = timestep
         self.__max_steps_per_render = max_steps_per_render
+        self.__time_left = 0
 
         self.__levels = [init_level]
 
@@ -37,6 +38,62 @@ class Game(object):
 
         return left
 
+    def step_physics(self):
+        """G.step_physics()
+
+        Advances logical game time.
+        """
+
+        event = self.__engine.input()
+
+        logger.info('Performing physics steps')
+
+        self.__levels[-1].step(
+            self.__timestep,
+            event,
+            self.__levels,
+            self.__engine.options())
+
+        self.__steps_in_frame += 1
+
+        self.__time_left -= self.__timestep
+
+    def multistep_physics(self):
+        """G.multistep_physics()
+
+
+        Perform enough logical steps of the game to cover the rendering time.
+
+        Stops 'early' if no more levels are left after one of the steps.
+        """
+
+        self.__steps_in_frame = 0
+
+        logger.info('The time accumulator is %f', self.__time_left)
+
+        while (self.__time_left >= self.__last_frame and
+                self.__steps_in_frame < self.__max_steps_per_render and
+                self.__levels_left()):
+
+                self.step_physics()
+
+    def render(self):
+        """G.render()
+
+        Renders the current level.
+        """
+
+        logger.info('Drawing a frame')
+
+        self.__levels[-1].render(
+            self.__engine,
+            self.__drawing_strategy)
+
+        self.__last_frame = self.__engine.dt()
+        self.__time_left += self.__last_frame
+
+        logger.info('The render time was %f', self.__last_frame)
+
     def run(self):
         """G.run()
 
@@ -44,14 +101,12 @@ class Game(object):
         """
 
         # Prepare for time-handling
-        max_steps_per_render = self.__max_steps_per_render
-        timestep = self.__timestep
-        time_left = 0
+        self.__time_left = 0
 
         # Until the game stops, iterate over the events
         while self.__levels_left():
 
-            # Render the level and get the render time
+            # When resolutions change everything is dirty
             if self.__engine.options().screen_changed():
 
                 logger.warning('Deprecated! Forcing redraw of all Entities '
@@ -59,43 +114,11 @@ class Game(object):
 
                 self.__drawing_strategy.force_all()
 
-            logger.info('Drawing a frame')
+            # Render the level and get the render time
+            self.render()
 
-            self.__levels[-1].render(
-                self.__engine,
-                self.__drawing_strategy)
-
-            dt = self.__engine.dt()
-
-            logger.info('The render time was %f', dt)
-
-            # Perform enough logical steps of the game to cover the rendering
-            # time
-            time_left += dt
-            steps = 0
-
-            logger.info('The time accumulator is %f', time_left)
-
-            while (time_left >= dt and
-                   steps < max_steps_per_render):
-
-                # When no levels are left, just exhaust the time left without
-                # advancing anything
-                if self.__levels_left():
-
-                    event = self.__engine.input()
-
-                    logger.info('Performing physics steps')
-
-                    self.__levels[-1].step(
-                        timestep,
-                        event,
-                        self.__levels,
-                        self.__engine.options())
-
-                    steps += 1
-
-                time_left -= timestep
+            # Make as many physic steps as necessary
+            self.multistep_physics()
 
             # Let the engine do whatever it needs to
             logger.info('Calling the Engine\'s update method')
