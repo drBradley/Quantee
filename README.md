@@ -53,13 +53,21 @@ brief overview:
   particular level
 * `src/director.py` -- `Director` abstract base class for things bossing
   everyone in a given `Level` around
+* `src/boxes.py` -- `Box` class for axis alligned bounding boxes
 * `src/drawing_strategy.py` -- considered for deprecation
   * `DrawingStrategy` abstract base class for objects deciding what to
     draw onscreen
   * `Everything` -- the simplest one possible
   * `DirtyWholes` -- draws less than Everything in some cases, but
     always redraws a whole `Entity`
-* `src/boxes.py` -- `Box` class for axis alligned bounding boxes
+
+## Versioning
+
+The scheme is `major.minor.release-optional_suffix'. For versions below
+`1.0.0` we allow breaking backward compatibility when the minor changes
+and introducing new API elements when the release changes. Post `1.0.0`
+we'll break compatibility only each major version, add new stuff each
+minor and fix bugs each release.
 
 ## License
 
