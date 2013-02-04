@@ -11,10 +11,7 @@ can rip it out and turn it into a framework without too much effort.
 
 * Python 2.7
 * Pygame 1.9
-
-Has been launched succesfully on both Linux and Windows. I'd assume
-it'll also work on a Mac or any other Unix-like system supporting the
-two aforementioned packages.
+* PyYAML 3.10
 
 ## Try it
 

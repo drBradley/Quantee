@@ -22,6 +22,8 @@ import math
 import argparse
 import logging.config
 
+from yaml import load
+
 from frames.game import Game
 from frames.level import Level
 from frames.drawing_strategy import DirtyWholes
@@ -595,32 +597,21 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     # Logging configuration
-    log_level = 'DEBUG' if args.debug else 'WARNING'
+    root_dir = os.path.dirname(os.path.abspath(__file__))
 
-    log_config = {
-        'version': 1,
-        'disable_existing_loggers': False,
+    log_config_path = os.path.join(root_dir, '../config/log.yaml')
 
-        'formatters': {
-            'simple': {
-                'format': '%(asctime)s\t%(name)s\t%(levelname)s\t%(message)s'
-            }
-        },
+    with open(log_config_path, 'r') as log_config_file:
 
-        'handlers': {
-            'console': {
-                'class': 'logging.StreamHandler',
-                'level': log_level,
-                'formatter': 'simple',
-                'stream': 'ext://sys.stdout'
-            }
-        },
+        log_config = load(log_config_file)
 
-        'root': {
-            'level': log_level,
-            'handlers': ['console']
-        }
-    }
+    if args.debug:
+
+        log_config['root']['level'] = 'DEBUG'
+
+        for handler in log_config['handlers']:
+
+            log_config['handlers'][handler]['level'] = 'DEBUG'
 
     logging.config.dictConfig(log_config)
 
