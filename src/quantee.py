@@ -194,7 +194,7 @@ class JumpNRun(Behaviour):
 
             ground = obox.y + obox.h
 
-            dy = max(dy, ground - box.y)
+            dy = ground - box.y
 
             self.__on_ground = True
 
@@ -214,7 +214,7 @@ class JumpNRun(Behaviour):
         dy = vy * dt
 
         hits_wall_on_left = box.x + dx <= obox.x + obox.w <= box.x
-        hits_wall_on_right = box.x + box.w < obox.x <= box.x + box.w + dx
+        hits_wall_on_right = box.x + box.w <= obox.x <= box.x + box.w + dx
 
         y_matches = (
             obox.y <= box.y + dy <= obox.y + obox.h or
@@ -222,13 +222,11 @@ class JumpNRun(Behaviour):
 
         if hits_wall_on_left and y_matches:
 
-            dx = max(dx, obox.x + obox.w - box.x)
+            dx = obox.x + obox.w - box.x
 
         elif hits_wall_on_right and y_matches:
 
-            dx = min(dx, obox.x - box.x - box.w - 1)
-            # TODO: Figure out why the following is necessary
-            dx = max(dx, 0)  # prevent bouncing off the wall
+            dx = obox.x - box.x - box.w
 
         vx = dx / dt
 
