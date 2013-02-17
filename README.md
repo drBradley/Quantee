@@ -58,6 +58,15 @@ brief overview:
   * `DirtyWholes` -- draws less than Everything in some cases, but
     always redraws a whole `Entity`
 
+## Known bugs
+
+So far we only know this
+
+* Quantee is hovering a few pixels over the ground level instead of
+  standing on the ground when jumping in place. It doesn't happen when
+  he moves even a pixel left or right.
+
+
 ## Versioning
 
 The scheme is `major.minor.release-optional_suffix`. For versions below
